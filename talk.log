@@ -1,0 +1,68 @@
+This is pdfTeX, Version 3.141592653-2.6-1.40.24 (TeX Live 2022) (preloaded format=pdftex 2022.10.23)  14 FEB 2023 22:58
+entering extended mode
+ restricted \write18 enabled.
+ %&-line parsing enabled.
+**talk.tex
+(./talk.tex (./slides.tex (./syntax-hi.tex (./colors.tex (./utils.tex)
+\_colorbox=\box16
+)
+\_currtoken=\toks13
+\_hibox=\box17
+\_outputbox=\box18
+\_outputline=\count27
+)
+(./macros.tex
+\o@baselineskip=\dimen16
+\o@lineskip=\dimen17
+\o@lineskiplimit=\dimen18
+\enumcount=\count28
+\b@xit=\box19
+\dem@b@xbandwidth=\dimen19
+\dem@b@xbandheight=\dimen20
+\dem@b@x=\box20
+\demobox@dimens=\box21
+)
+\tboxw=\dimen21
+\tboxh=\dimen22
+\lastox=\dimen23
+\lastoy=\dimen24
+\lastex=\dimen25
+\lastey=\dimen26
+) [1{/usr/local/texlive/2022/texmf-var/fonts/map/pdftex/updmap/pdftex.map}] [1]
+ [1] [1] [1] [1] [1] [1] [1
+
+pdfTeX warning: pdftex: pop empty color page stack 0
+] [1] [1] [1] [1] [1] [1] [1] [1] [1] [1] [1] [1] [1] [1] [1] [1]
+Underfull \hbox (badness 10000) detected at line 820
+[]
+
+\hbox(14.22636+0.0)x14.22636
+.\vbox(14.22636+0.0)x0.0
+
+
+Underfull \hbox (badness 10000) detected at line 829
+[]
+
+\hbox(14.22636+0.0)x14.22636
+.\vbox(14.22636+0.0)x0.0
+
+[1] [1] [1] [1] [1] [1] [1] [1] [1] [1] [1] [1] [1] [1] [1] [1] [1] [1]
+[1] [1] [1] [1] [1] [1] [1] )</usr/local/texlive/2022/texmf-dist/fonts/type1/pu
+blic/amsfonts/cm/cmbx10.pfb></usr/local/texlive/2022/texmf-dist/fonts/type1/pub
+lic/amsfonts/cm/cmbx7.pfb></usr/local/texlive/2022/texmf-dist/fonts/type1/publi
+c/amsfonts/cm/cmcsc10.pfb></usr/local/texlive/2022/texmf-dist/fonts/type1/publi
+c/amsfonts/cm/cmex10.pfb></usr/local/texlive/2022/texmf-dist/fonts/type1/public
+/amsfonts/cm/cmmi10.pfb></usr/local/texlive/2022/texmf-dist/fonts/type1/public/
+amsfonts/cm/cmr10.pfb></usr/local/texlive/2022/texmf-dist/fonts/type1/public/am
+sfonts/cm/cmr7.pfb></usr/local/texlive/2022/texmf-dist/fonts/type1/public/amsfo
+nts/cm/cmsy10.pfb></usr/local/texlive/2022/texmf-dist/fonts/type1/public/amsfon
+ts/cm/cmti10.pfb></usr/local/texlive/2022/texmf-dist/fonts/type1/public/amsfont
+s/cm/cmtt10.pfb></usr/local/texlive/2022/texmf-dist/fonts/type1/public/amsfonts
+/cm/cmtt8.pfb>
+Output written on talk.pdf (50 pages, 196511 bytes).
+PDF statistics:
+ 211 PDF objects out of 1000 (max. 8388607)
+ 146 compressed objects within 2 object streams
+ 0 named destinations out of 1000 (max. 500000)
+ 1 words of extra memory for PDF output out of 10000 (max. 10000000)
+

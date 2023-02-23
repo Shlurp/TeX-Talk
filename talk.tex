@@ -1,0 +1,1520 @@
+\input slides
+
+\baselineskip=20pt plus 5pt
+%\lineskip=5pt plus 3pt
+%\lineskiplimit=5pt
+
+\def\syntaxbg{.9 .9 .9}
+\def\@numhskip{3ex}
+
+\def\bheadline{\headline{blue}{white}{\TeX nical Programming}}
+\def\bfootline{\footline{blue}{white}}
+\def\gheadline{\headline{darkgreen}{white}{\TeX nical Programming}}
+\def\gfootline{\footline{darkgreen}{white}}
+\def\oheadline{\headline{orange}{white}{\TeX nical Programming}}
+\def\ofootline{\footline{orange}{white}}
+
+\def\tokcenterline{\line\bgroup\hfill\bgroup\aftergroup\hfill\aftergroup\egroup\let\_regU}
+
+\let\epsilon=\varepsilon
+
+\beginslide{[rgb]{.95 .95 1}}
+
+    {\def\_buffer_height{10pt}
+    \textbox[title]\framecoloredbox{0pt}{.5\vsize-.5\tboxh - 1cm}{\hsize-\frameboxbuf}{{blue}}
+    \centerline{\localcolor{white}{\titlefont\fakebold{\TeX nical Programming}}}
+    \endtextbox
+    }
+    
+    \textbox\framecoloredbox{.5\hsize-.5\tboxw}{\p@title@ey+1cm}{10cm}{{blue}}
+    \centerline{\color{white}Slurp}
+    \centerline{\color{white}February, 2023}
+    \endtextbox
+
+\endslide
+
+\beginslide
+    \bheadline
+
+    \textbox\empty{2cm}{.5\vsize-.5\tboxh}{15cm}{}
+    {\fifteenbf\color{black}
+        \blist
+            \item \TeX{} engines and formats: \TeX{} vs \boldLaTeX
+            \item Typesetting in plain \TeX
+            \item Macros and primitives
+            \item Repeated macros
+            \item Lists
+        \elist
+    }
+    \endtextbox
+
+    \bfootline{Contents}
+\endslide
+
+\beginslide
+
+    {\def\_buffer_height{10pt}
+    \textbox\framecoloredbox{1cm}{.5\vsize-.5\tboxh}{\hsize-2cm}{{darkgreen}}
+        \centerline{\headerfont\color{white}\fakebold{\TeX{} Engines and Formats}}
+    \endtextbox
+    }
+
+\endslide
+
+\beginslide
+
+    \gheadline
+
+    \textbox\empty{1cm}{2cm}{\hsize-2cm}{}
+        \TeX{} refers mainly to three things:
+        \blist
+            \item The \TeX{} language, a typesetting language made up of {\fifteenit primitives\/} like \macroname\def{} and \macroname\hskip.
+            \item The \TeX{} engine ({\tt tex}), a program for compiling files written in the \TeX{} language.
+            \item The plain \TeX{} format, a bare-bones \TeX{} format.
+        \elist
+    \endtextbox
+
+    \gfootline{\TeX{} engines and formats}
+
+\endslide
+
+\beginslide
+
+    \gheadline
+
+    \textbox\empty{1cm}{2cm}{\hsize-2cm}{}
+        \TeX{} formats are self-contained macro packages whose intention it is to define macros for the user's use in creating documents.
+
+        Some well-known formats are plain \TeX, \LaTeX, and Con\TeX t.
+
+        Macro packages are not considered formats since they are not self-contained and their intention is to provide further abstraction on top of an existing format.
+
+        The format can be specified during the invocation of the {\tt tex} command on the command line.
+    \endtextbox
+
+    \gfootline{\TeX{} engines and formats}
+
+\endslide
+
+\beginslide
+
+    \gheadline
+
+    \textbox\empty{1cm}{2cm}{\hsize-2cm}{}
+        \TeX{} engines are programs which compile \TeX{} code into output.
+        Historically this output was originally a {\tt dvi} file, but nowadays most output is a {\tt pdf} file.
+
+        Some well-known formats are $\epsilon$-\TeX, pdf\TeX, Lua\TeX, and \XeTeX.
+
+        Engines tend to add primitives to the base \TeX{} language: for example,
+        \hbox{$\epsilon$-\TeX} adds the \macroname\numexpr{} and related primitives, pdf\TeX{} adds the \macroname\pdfliteral{} primitive among others.
+
+        Note that invoking the program engine in the command line by itself also specifies the format: {\tt pdftex} runs the pdf\TeX engine with the plain \TeX{} format,
+        while {\tt pdflatex} runs the pdf\TeX engine with the \LaTeX{} format.
+    \endtextbox
+
+    \gfootline{\TeX{} engines and formats}
+
+\endslide
+
+\beginslide
+
+    {\def\_buffer_height{10pt}
+    \textbox\framecoloredbox{1cm}{.5\vsize-.5\tboxh}{\hsize-2cm}{{darkgreen}}
+        \centerline{\headerfont\color{white}\fakebold{Questions?}}
+    \endtextbox
+    }
+
+\endslide
+
+\beginslide
+
+    {\def\_buffer_height{10pt}
+    \textbox\framecoloredbox{1cm}{.5\vsize-.5\tboxh}{\hsize-2cm}{{blue}}
+        \centerline{\headerfont\color{white}\fakebold{Typesetting in Plain \TeX}}
+    \endtextbox
+    }
+
+\endslide
+
+\beginslide
+    \bheadline
+
+    \textbox\empty{1cm}{2cm}{\hsize-2cm}{}
+        \color{black}
+        \TeX{} creates its pages by creating a vertical list and filling it with boxes, glue, leaders, penalties, kerns, etc.
+        There are two types of boxes, horizontal boxes and vertical boxes.
+
+        Boxes have width, height, and depth.
+        The height of a box is visually its positive vertical displacement relative to the baseline, and its depth is its negative vertical displacement relative to the baseline.
+        For example:
+
+        \medskip
+        \font\largerm=cmr10 at 40pt
+        \centerline{\demobox{\largerm yelling}}
+    \endtextbox
+
+    \bfootline{Typesetting in plain \TeX}
+\endslide
+
+\beginslide
+    \bheadline
+
+    \textbox[hboxbox]\coloredbox{1cm}{2cm}{2cm}{{blue}}
+        \centerline{\color{white}\macroname\hbox}
+    \endtextbox
+
+    \textbox[hboxexbox]\empty{4cm}{\p@hboxbox@oy}{\hsize - 5cm}{}%
+        \macrousage\hbox to/bslash^^00spread <dimension>{<horizontal material>}/emacrousage: Creates \hfill\penalty-1000a horizontal box, if
+        {\fifteenit to dimension\/} is specified then the width of the box is {\fifteenit dimension}.
+
+        If {\fifteenit spread dimension\/} is specified then the width of the box is {\fifteenit dimension\/} more than its natural dimension.
+
+        The height and depth of the box is equal to the height and depth of its contents.
+    \endtextbox
+
+    \textbox[vboxbox]\coloredbox{1cm}{\p@hboxexbox@ey + .5cm}{2cm}{{blue}}
+        \centerline{\color{white}\macroname\vbox}
+    \endtextbox
+
+    \textbox\empty{4cm}{\p@vboxbox@oy}{\hsize - 5cm}{}%
+        \macrousage\vbox to/bslash^^00spread <dimension>{<horizontal material>}/emacrousage: Creates \hfill\penalty-1000a vertical box, if
+        {\fifteenit to dimension\/} is specified then the height of the box is {\fifteenit dimension}.
+
+        If {\fifteenit spread dimension\/} is specified then the height of the box is {\fifteenit dimension\/} more than its natural dimension.
+
+        The width of the box is the width of its contents, and the depth of the box is the depth of the final box in it.
+
+        The box's baseline is the same as that of the final box inside, to align to the top box, use \macroname\vtop.
+    \endtextbox
+
+    \bfootline{Typesetting in plain \TeX}
+\endslide
+
+\beginslide
+    \bheadline
+
+    \textbox\empty{1cm}{2cm}{\hsize-2cm}{}
+        Between two boxes there is something called {\fifteenit glue}, which connects the boxes.
+        Glue is one type of blank space (the other being a kern).
+
+        Glue has three attributes: its natural length, its maximum stretchiness, and its maximum shrinkage.
+        Glue stretches and shrinks only when it needs to, and \TeX{} uses these attributes in order to fit material into widths the material couldn't properly fit into
+        in its natural width.
+
+        For example:
+
+        \medskip
+        \beginhi
+\hbox to 5cm{hello\hskip 3cm plus 2cm}there
+        \endhi
+        \medskip
+
+        Creates
+
+        \medskip\centerline{\hbox to 5cm{hello\hskip3cm plus 2cm}there}\medskip
+
+        Without the {\fifteentt plus2cm} we'd get the same output but with an overfull hbox warning.
+
+        The amount of stretchiness and shrinkage can be infinite.
+
+        All the dimensions may be negative as well.
+    \endtextbox
+
+    \bfootline{Typesetting in plain \TeX}
+\endslide
+
+\beginslide
+    \bheadline
+
+    \textbox[hskipbox]\coloredbox{1cm}{2cm}{2cm}{{blue}}
+        \centerline{\color{white}\macroname\hskip}
+    \endtextbox
+
+    \textbox[hskipexbox]\empty{4cm}{\p@hskipbox@oy}{\hsize - 5cm}{}
+        \macrousage\hskip <natural length> plus <stretch> minus <shrink>/emacrousage: Adds \hfill\penalty-1000horizontal glue with the specified natural length, maximal stretch and shrinkage.
+
+        The stretch and shrink are optional.
+    \endtextbox
+
+    \textbox[vskipbox]\coloredbox{1cm}{\p@hskipexbox@ey + .5cm}{2cm}{{blue}}
+        \centerline{\color{white}\macroname\vskip}
+    \endtextbox
+
+    \textbox[vskipexbox]\empty{4cm}{\p@vskipbox@oy}{\hsize - 5cm}{}
+        \macrousage\vskip <natural length> plus <stretch> minus <shrink>/emacrousage: Adds \hfill\penalty-1000vertical glue with the specified natural length, maximal stretch and shrinkage.
+
+        The stretch and shrink are optional.
+    \endtextbox
+
+    \textbox[kernbox]\coloredbox{1cm}{\p@vskipexbox@ey + .5cm}{2cm}{{blue}}
+        \centerline{\color{white}\macroname\kern}
+    \endtextbox
+
+    \textbox\empty{4cm}{\p@kernbox@oy}{\hsize-5cm}{}
+        \macrousage\kern <dimension>/emacrousage: Adds a kern whose dimension is {\fifteenit dimension}.
+        Kerns, unlike glue are nonbreaking, nonstretching, and nonshrinking.
+        The orientation of the kern (horizontal or vertical) is inferred by the context.
+    \endtextbox
+
+    \bfootline{Typesetting in plain \TeX}
+\endslide
+
+\beginslide
+    \bheadline
+
+    \textbox\empty{1cm}{2cm}{\hsize-2cm}{}
+        \TeX{} has $3$ orders of infinities for glue stretching:
+    \endtextbox
+
+    \textbox\coloredbox{1cm}{3cm}{2cm}{{blue}}
+        \centerline{\color{white}\tt fil}
+    \endtextbox
+
+    \textbox[filexbox]\empty{4cm}{3cm}{\hsize-5cm}{}
+        First order {\tt fil}: \icode \hskip 0pt plus 1fil\relax/eicode{} creates glue\hfill\penalty-1000which has no natural length but has infinite stretchiness.
+        A primitive version, \macroname\hfil, exists as well in place of the code above.
+    \endtextbox
+
+    \textbox\coloredbox{1cm}{\p@filexbox@ey + .5cm}{2cm}{{blue}}
+        \centerline{\color{white}\tt fill}
+    \endtextbox
+
+    \textbox[fillexbox]\empty{4cm}{\p@filexbox@ey + .5cm}{\hsize-5cm}{}
+        Second order {\tt fill}: \icode \hskip 0pt plus 1fill\relax/eicode{} creates glue which also has no natural length and infinite stretchiness.
+        It takes precedent over first order infinities.
+        A primitive version, \macroname\hfill, exists as well.
+    \endtextbox
+
+    \textbox\coloredbox{1cm}{\p@fillexbox@ey + .5cm}{2cm}{{blue}}
+        \centerline{\color{white}\tt filll}
+    \endtextbox
+
+    \textbox[filllexbox]\empty{4cm}{\p@fillexbox@ey + .5cm}{\hsize-5cm}{}
+        Third order {\tt filll}: Same as the other two, but takes precedent over both of them.
+        No primitive version exists.
+    \endtextbox
+
+    \textbox\empty{1cm}{\p@filllexbox@ey + .5cm}{\hsize-2cm}{}
+        Vertical versions of \macroname\hfil{} and \macroname\hfill{} exist, \macroname\vfil{} and \macroname\vfill.
+
+        Another important primitive is \macroname\hss{} which can both shrink and stretch infinitely.
+        It is analogous to \icode \hskip 0pt plus 1fil minus 1fil/eicode.
+
+        It too has a vertical version \macroname\vss.
+    \endtextbox
+
+    \bfootline{Typesetting in plain \TeX}
+\endslide
+
+\beginslide
+    \bheadline
+
+    \textbox\_framebox{1cm}{2cm}{\hsize-2cm}{}
+\beginhi
+\def\line{\hbox to \hsize}
+\def\centerline#1{\line{\hfil#1\hfil}
+\def\rightline #1{\line{\hfil#1}}
+\def\leftline  #1{\line{#1\hfil}
+\def\rlap#1{\hbox to 0pt{#1\hss}}
+\def\llap#1{\hbox to 0pt{\hss#1}}
+\endhi
+    \endtextbox
+
+    \textbox\empty{1cm}{7cm}{\hsize-2cm}{}
+        \macroname\line{} creates a box which spans the entire line.
+
+        \macroname\centerline{} centers input relative to the line.
+
+        \macroname\rightline{} and \macroname\leftline{} right and left-justify input respectively.
+
+        \macroname\rlap{} typesets input and then seems to move back as if it hadn't been typeset.
+
+        \macroname\llap{} moves back the width of its material and then typesets it.
+    \endtextbox
+
+    \bfootline{Typesetting in plain \TeX}
+\endslide
+
+\beginslide
+    \bheadline
+
+    \textbox\_framebox{1cm}{2cm}{\hsize-2cm}{}
+\beginhi
+\centerline{Centered Text}
+\rightline{Right-Justified}
+\leftline{Left-Justified}
+
+\quitvmode\llap{outside}\hfill1\llap{0} and \rlap{1}0
+    \hfill\rlap{outside}
+\endhi
+    \endtextbox
+
+    \textbox\coloredbox{4cm}{7cm}{\hsize-8cm}{[rgb]{.9 .9 .9}}
+        \centerline{Centered Text}
+        \rightline{Right-Justified}
+        \leftline{Left-Justified}
+        
+        \quitvmode\llap{outside}\hfill1\llap{0} and \rlap{1}0\hfill\rlap{outside}
+    \endtextbox
+
+    \bfootline{Typesetting in plain \TeX}
+\endslide
+
+\beginslide
+
+    \bheadline
+
+    \textbox\coloredbox{1cm}{2cm}{2cm}{{blue}}
+        \centerline{\color{white}\macroname\hrule}
+    \endtextbox
+
+    \textbox\empty{4cm}{2cm}{\hsize-5cm}{}
+        \macrousage\hrule width <dimen> height <dimen> depth <dimen>/emacrousage
+        
+        Creates a horizontal rule (a horizontal line).
+        All of the dimensions are optional.
+        If the width is not specified, then the width spans the width of the smallest box enclosing the rule.
+        If the height is not specified, it is by default $0.4$pt.
+        If the depth is not specified, it is by default $0$pt.
+
+        This must be used in vertical mode (not horizontal mode, it is a horizontal rule because it is generally used to make
+        horizontal lines in vertical mode).
+    \endtextbox
+
+    \textbox\coloredbox{1cm}{\lastey+.5cm}{2cm}{{blue}}
+        \centerline{\color{white}\macroname\vrule}
+    \endtextbox
+
+    \textbox\empty{4cm}{\lastoy}{\hsize-5cm}{}
+        \macrousage\vrule width <dimen> height <dimen> depth <dimen>/emacrousage
+        
+        Creates a vertical rule (a vertical line).
+        All of the dimensions are optional.
+        If the width is not specified, it is by default $0.4$pt.
+        If the height or the depth are not specified, they span the height or depth of the smallest box enclosing the rule.
+
+        This must be used in vertical mode.
+    \endtextbox
+
+    \bfootline{Typesetting in plain \TeX}
+\endslide
+
+\beginslide
+    \bheadline
+
+    \textbox\_framebox{1cm}{2cm}{\hsize-2cm}{}
+\beginhi
+\hrule
+Hello \vrule
+
+There \vrule \vbox to 20pt{}
+
+\vbox{\line{}\hrule height 3pt}
+
+\vskip.5cm
+\hrule height 1pt
+\vskip.5cm
+\hrule height 2pt
+\hrule height 2pt
+\endhi
+    \endtextbox
+
+    \textbox\coloredbox{1cm}{10.5cm}{\hsize-2cm-\colorboxbuf}{[rgb]{.9 .9 .9}}
+        \hrule
+        Hello \vrule
+        
+        There \vrule \vbox to 20pt{}
+        
+        \vbox{\hbox to 5cm{}\hrule height 3pt}
+
+        \vskip.5cm
+        \hrule height 1pt
+        \vskip.5cm
+        \hrule height 2pt
+        \hrule height 2pt
+    \endtextbox
+
+    \bfootline{Typesetting in plain \TeX}
+\endslide
+
+\beginslide
+    \bheadline
+
+    \textbox\_framebox{1cm}{2cm}{\hsize-2cm}{}
+\beginhi
+\def\boxed#1{\vbox{\hrule \hbox{\vrule #1\vrule}\hrule}}
+\def\badbox#1{\hbox{\vrule \vbox{\hrule #1\hrule}\vrule}}
+
+\boxed{Typesetting in plain \TeX}
+
+\vskip.5cm
+\badbox{Typesetting in plain \TeX}
+\endhi
+    \endtextbox
+
+    \textbox\coloredbox{1cm}{7.5cm}{\hsize-2cm-\colorboxbuf}{[rgb]{.9 .9 .9}}
+        \gdef\boxed#1{\vbox{\hrule \hbox{\vrule #1\vrule}\hrule}}
+        \def\badbox#1{\hbox{\vrule \vbox{\hrule #1\hrule}\vrule}}
+        
+        \boxed{Typesetting in plain \TeX}
+
+        \vskip.5cm
+        \badbox{Typesetting in plain \TeX}
+    \endtextbox
+
+    \bfootline{Typesetting in plain \TeX}
+\endslide
+
+\beginslide
+    \bheadline
+
+    \textbox\_framebox{1cm}{2cm}{\hsize-2cm}{}
+\beginhi
+\def\spas{3pt}
+\def\spacebox#1{%
+    \hbox{%
+        \vrule%
+        \vbox{%
+            \hrule \vskip\spas%
+            \hbox{\hskip\spas #1\hskip\spas}%
+            \vskip\spas \hrule%
+        }%
+        \vrule%
+    }%
+}
+
+\spacebox{Typesetting in plain \TeX}
+\endhi
+    \endtextbox
+
+    \textbox\coloredbox{1cm}{13cm}{\hsize-2cm-\colorboxbuf}{[rgb]{.9 .9 .9}}
+        \def\spas{3pt}
+        \def\spacebox#1{%
+            \hbox{%
+                \vrule%
+                \vbox{%
+                    \hrule \vskip\spas%
+                    \hbox{\hskip\spas #1\hskip\spas}%
+                    \vskip\spas \hrule%
+                }%
+                \vrule%
+            }%
+        }
+
+        \quitvmode\spacebox{Typesetting in plain \TeX}
+    \endtextbox
+
+    \bfootline{Typesetting in plain \TeX}
+\endslide
+
+\beginslide
+    \bheadline
+
+    \textbox\empty{1cm}{2cm}{\hsize-2cm}{}
+        \TeX{} has box registers which you can use to store boxes.
+        The number of box registers depends on which engine you use (the original \TeX{} engine had $256$ from \icode \box0/eicode{}
+        to \icode \box255/eicode).
+    \endtextbox
+
+    \textbox\coloredbox{1cm}{\lastey+.5cm}{2cm}{{blue}}
+        \centerline{\color{white}\macroname\newbox}
+    \endtextbox
+
+    \textbox\empty{4cm}{\lastoy}{\hsize-5cm}{}
+        \macrousage\newbox<control sequence>/emacrousage: Allocates a box and sets {\fifteentt control sequence} to reference this
+        box.
+    \endtextbox
+
+    \textbox\coloredbox{1cm}{\lastey + .5cm}{2cm}{{blue}}
+        \centerline{\color{white}\macroname\setbox}
+    \endtextbox
+
+    \textbox\empty{4cm}{\lastoy}{\hsize-5cm}{}
+        \macrousage\setbox<box number> = <box>/emacrousage: Sets the {\fifteentt box number}-th box register to be equal to
+        {\fifteentt box}.
+    \endtextbox
+
+    \textbox\coloredbox{1cm}{\lastey + .5cm}{2cm}{{blue}}
+        \centerline{\color{white}\macroname\box}
+    \endtextbox
+
+    \textbox\empty{4cm}{\lastoy}{\hsize-5cm}{}
+        \macrousage\box<box number>/emacrousage: uses the {\fifteentt box number} box register.
+        After using this, the box register is emptied.
+    \endtextbox
+
+    \textbox\coloredbox{1cm}{\lastey + .5cm}{2cm}{{blue}}
+        \centerline{\color{white}\macroname\copy}
+    \endtextbox
+
+    \textbox\empty{4cm}{\lastoy}{\hsize-5cm}{}
+        \macrousage\copy<box number>/emacrousage: like \macroname\box{} but the register is not emptied after its use.
+    \endtextbox
+
+    \textbox\coloredbox{1cm}{\lastey + .5cm}{2cm}{{blue}}
+        \centerline{\color{white}\macroname\unhbox}
+    \endtextbox
+
+    \textbox\empty{4cm}{\lastoy}{\hsize-5cm}{}
+        \macrousage\unhbox<box number>/emacrousage: uses the {\fifteentt box number} box register and removes a level of boxing.
+
+\beginhi
+\setbox0=\hbox{A} \setbox1=\hbox{\unhbox0 B}
+\endhi
+
+        Makes \icode \box1/eicode{} equal to \icode \hbox{AB}/eicode.
+
+        The box register must be a horizontal box (\macroname\hbox).
+        For vertical boxes, use \macroname\unvbox.
+        There also exist \macroname\unhcopy{} and \macroname\unvcopy.
+    \endtextbox
+
+    \bfootline{Typesetting in plain \TeX}
+\endslide
+
+\beginslide
+    \bheadline
+
+    \textbox\empty{1cm}{2cm}{\hsize-2cm}{}
+        You can access the width, height, and depth of a box register using \macroname\wd, \macroname\ht, and \macroname\dp.
+        The use being \macrousage \wd<box register>/emacrousage.
+
+        In order to print a \TeX{} variable (like the dimensions of a box), you must prepend it with the primitive \macroname\the.
+    \endtextbox
+
+    \textbox\_framebox{1cm}{\lastey+.5cm}{\hsize-2cm}{}
+\beginhi
+\setbox0=\hbox{Typesetting in plain \TeX}
+Width: \the\wd0, Height: \the\ht0, Depth: \the\dp0
+\endhi
+    \endtextbox
+
+    \textbox\coloredbox{1cm}{\lastey+5pt}{\hsize-2cm-\colorboxbuf}{[rgb]{.9 .9 .9}}
+        \setbox0=\hbox{Typesetting in plain \TeX}
+        Width: \the\wd0, Height: \the\ht0, Depth: \the\dp0
+    \endtextbox
+
+    \textbox\empty{1cm}{\lastey+.5cm}{\hsize-2cm}{}
+        Also, notice that something like
+
+\beginhi
+\hbox{A}B
+\endhi
+
+        Gives
+    \endtextbox
+
+    \textbox\coloredbox{1cm}{\lastey+5pt}{\hsize-2cm-\colorboxbuf}{[rgb]{.9 .9 .9}}
+        \hbox{A}B
+    \endtextbox
+
+    \textbox\empty{1cm}{\lastey+5pt}{\hsize-2cm}{}
+        This is because when \TeX{} boxes \icode \hbox{A}/eicode{} it is in vertical mode, and so the box is placed into the
+        vertical list.
+        Then when it reads {\tt B}, it enters horizontal mode, then boxes the horizontal material (which is just the {\tt B} here)
+        and places that into the vertical list.
+    \endtextbox
+
+    \bfootline{Typesetting in plain \TeX}
+\endslide
+
+\beginslide
+    \bheadline
+
+    \textbox\empty{1cm}{2cm}{\hsize-2cm}{}
+        So the vertical list looks like
+
+\begincode
+\vbox{
+    \hbox{A}
+    \hbox{B}
+}
+/endcode
+
+        So what we'd want to do is exit vertical mode before the \macroname\hbox, so its added to the horizontal list instead
+        of the vertical one.
+        Ie. we want the vertical list to look like:
+
+\begincode
+\vbox{
+    \hbox{\hbox{A}B}
+}
+/endcode
+        In order to enter horizontal mode, we need to add horizontal material.
+
+        We can do this by unhboxing a void register, since \macroname\unhbox{} adds horizontal material.
+
+        \TeX{} provides a box register which is meant to be always void, \macroname\voidb@x, so you can do
+
+\appendlist{catcodes}{{@}{0}}
+\beginhi
+\unhbox\voidb@x\hbox{A}B
+\endhi
+    \endtextbox
+
+    \textbox\coloredbox{1cm}{\lastey+5pt}{\hsize-2cm-\colorboxbuf}{[rgb]{.9 .9 .9}}
+        \unhbox\voidb@x\hbox{A}B
+    \endtextbox
+
+    \textbox\empty{1cm}{\lastey+5pt}{\hsize-2cm}{}
+        \TeX{} also provides the macro \macroname\leavevmode{} which is short for this.
+
+        pdf\TeX{} provides the primitive \macroname\quitvmode{} which achieves the same thing.
+    \endtextbox
+
+    \bfootline{Typesetting in plain \TeX}
+\endslide
+
+\beginslide
+    \bheadline
+
+    \textbox\_framebox{1cm}{1cm}{\hsize-2cm}{}
+\beginhi
+\def\presentbox#1{{%
+    \setbox0=\hbox{#1}%
+    \hbox{%
+        \vbox{\tt%
+            \hbox{Width: \the\wd0}%
+            \hbox{Height: \the\ht0}%
+            \hbox{Depth: \the\dp0}%
+        }%
+        \quad\boxed{%
+            \rlap{#1}%
+            \vrule width\wd0 height .5pt depth 0pt%
+        }%
+    }%
+}}
+
+\presentbox{Typesetting in plain \TeX}
+\endhi
+    \endtextbox
+
+    \textbox\coloredbox{1cm}{\lastey+5pt}{\hsize-2cm-\colorboxbuf}{[rgb]{.9 .9 .9}}
+        \def\presentbox#1{{%
+            \setbox0=\hbox{#1}%
+            \hbox{%
+                \vbox{\tt%
+                    \hbox{Width: \the\wd0}%
+                    \hbox{Height: \the\ht0}%
+                    \hbox{Depth: \the\dp0}%
+                }%
+                \quad\boxed{%
+                    \rlap{#1}%
+                    \vrule width\wd0 height .5pt depth 0pt%
+                }%
+            }%
+        }}
+        
+        \quitvmode\presentbox{Typesetting in plain \TeX}
+    \endtextbox
+
+    \bfootline{Typesetting in plain \TeX}
+\endslide
+
+\beginslide
+    \bheadline
+
+    \textbox\_framebox{1cm}{2cm}{\hsize-2cm}{}
+\beginhi
+\def\centersym#1#2{\quitvmode{%
+    \setbox0=\hbox{#1}%
+    \rlap{#1}\hbox to \wd0{\hss#2\hss}%
+}}
+
+\centersym{$\bigcup$}{$\cdot$}
+\endhi
+    \endtextbox
+
+    \textbox\coloredbox{1cm}{\lastey+5pt}{\hsize-2cm-\colorboxbuf}{[rgb]{.9 .9 .9}}
+        \def\centersym#1#2{\quitvmode{%
+            \setbox0=\hbox{#1}%
+            \rlap{#1}\hbox to \wd0{\hss#2\hss}%
+        }}
+
+        \centersym{$\bigcup$}{$\cdot$}
+    \endtextbox
+
+    \bfootline{Typesetting in plain \TeX}
+\endslide
+
+\beginslide
+    \bheadline
+
+    \textbox\empty{1cm}{2cm}{\hsize-2cm}{}
+        Leaders are a generalization of \TeX's concept of glue.
+        The purpose of leaders are to {\fifteenit lead} your eyes across the page.
+
+        This\leaders\hbox to 1em{\hss.\hss}\hfill is an example of leaders.
+
+        The general use of leaders is
+
+        \tokcenterline{\macrousage \leaders<box or rule><glue>/emacrousage}
+
+        For example the above leaders was created by
+
+\vskip5pt
+\beginhi
+\leaders\hbox to 1em{\hss.\hss}\hfill
+\endhi
+
+    Note that if a line ends with leaders or glue, it is removed (it doesn't really make sense to end a line with a blank space).
+    So the following code:
+
+\beginhi
+\quitvmode\leaders\hbox to 1em{\hss.\hss}\hfill
+
+Next line
+\endhi
+
+        yields:
+    \endtextbox
+
+    \textbox\coloredbox{1cm}{\lastey+5pt}{\hsize-2cm-\colorboxbuf}{[rgb]{.9 .9 .9}}
+        \quitvmode\leaders\hbox to 1em{\hss.\hss}\hfill
+        
+        Next line
+    \endtextbox
+
+    \textbox\empty{1cm}{\lastey+5pt}{\hsize-2cm}{}
+        There is no leaders here because the paragraph ends with leaders.
+        In order to get around this you can simply place an empty box, or an empty kern after the leaders.
+    \endtextbox
+
+    \bfootline{Typesetting in plain \TeX}
+\endslide
+
+\beginslide
+    \bheadline
+
+    \textbox\empty{1cm}{2cm}{\hsize-2cm}{}
+        Notice the \macroname\quitvmode{} before the \macroname\leaders{}, this is necessary because \macroname\leaders{} works in
+        vertical mode as well, but its glue must be vertical glue (ie \macroname\vskip, \macroname\vfill, etc).
+    \endtextbox
+
+    \textbox\coloredbox{1cm}{\lastey+.5cm}{2.5cm}{{blue}}
+        \centerline{\color{white}\macroname\leaders}
+    \endtextbox
+
+    \textbox\empty{4.5cm}{\lastoy}{\hsize-5.5cm}{}
+        \macroname\leaders{} places leaders aligned with (what seems like) an infinite grid of boxes (either aligned with a row or
+        column of the grid, depending on the horizontal/vertical context).
+
+        This grid of boxes has the width/height of the box/rule in the leaders, and starts left aligned with the smallest enclosing
+        box of the material.
+
+        \macroname\leaders{} starts placing the leaders at the first box fully enclosed in the available space, and continues to
+        the last available box (which is placed according to the input glue)
+
+        So for example doing something like
+
+{\let\_output_line_number=\@gobble
+\beginhi
+Hello\leaders\hbox to.5cm{\hss.\hss}\hfill there!
+\endhi
+}
+
+        \quitvmode
+        \rlap{\color{grey}%
+            \line{\leaders\hbox to.5cm{\hss\boxed{\hbox to.5cm{\vbox to.5cm{}}}\hss}\hfil}%
+        }%
+        Hello\hfill there!
+
+        So the first box is placed in the $4$th box (the first box which isn't occupied), and the last in the $4$th to last (the
+        last box which isn't occupied).
+
+        \quitvmode
+        \rlap{\color{grey}%
+            \line{\leaders\hbox to.5cm{\hss\boxed{\hbox to.5cm{\vbox to.5cm{}}}\hss}\hfill}%
+        }%
+        Hello\leaders\hbox to.5cm{\hss.\hss}\hfill there!
+    \endtextbox
+
+    \bfootline{Typesetting in plain \TeX}
+\endslide
+
+\beginslide
+    \bheadline
+
+    \textbox\coloredbox{1cm}{2cm}{2.5cm}{{blue}}
+        \centerline{\color{white}\macroname\cleaders}
+    \endtextbox
+
+    \textbox\empty{4.5cm}{\lastoy}{\hsize-5.5cm}{}
+        The process here is simpler, the boxes or rules are all packed tightly next to each other and an equal amount of glue is
+        placed on either ends of the leaders:
+
+        \quitvmode\rlap{leaders}\hphantom{cleaders}:\leaders\hbox to1cm{\hss.\hss}\hfill end
+
+        cleaders:\cleaders\hbox to1cm{\hss.\hss}\hfill end
+    \endtextbox
+
+    \textbox\coloredbox{1cm}{\lastey+.5cm}{2.5cm}{{blue}}
+        \centerline{\color{white}\macroname\xleaders}
+    \endtextbox
+
+    \textbox\empty{4.5cm}{\lastoy}{\hsize-5.5cm}{}
+        The boxes or rules here are all spaced equally apart.
+        If there are $q$ boxes/rules, then an equal amount of glue is placed in the $q+1$ spots between/around them.
+
+        \quitvmode\rlap{leaders}\hphantom{xleaders}:\leaders\hbox to1cm{\hss.\hss}\hfill end
+
+        xleaders:\xleaders\hbox to1cm{\hss.\hss}\hfill end
+    \endtextbox
+
+    \bfootline{Typesetting in plain \TeX}
+\endslide
+
+\beginslide
+    \bheadline
+
+    \textbox\empty{1cm}{2cm}{\hsize-2cm}{}
+        Notice that while the placement of the boxes with \macroname\leaders{} is independent of the surrounding material, so
+        multiple \macroname\leaders{} will have aligned boxes:
+
+        \def\dotsleads{\leaders\hbox to1em{\hss.\hss}\hfill}
+        \line{Typesetting in plain \TeX\dotsleads}
+        \line{Typesetting in plain\dotsleads\TeX}
+        \line{Typesetting in\dotsleads plain \TeX}
+        \line{Typesetting\dotsleads in plain \TeX}
+        \line{\dotsleads Typesetting in plain \TeX}
+
+        While \macroname\cleaders{} and \macroname\xleaders{} both are:
+
+        \vskip5pt
+        \def\dotsleads{\cleaders\hbox to1em{\hss.\hss}\hfill}
+        \line{Typesetting in plain \TeX\dotsleads}
+        \line{Typesetting in plain\dotsleads\TeX}
+        \line{Typesetting in\dotsleads plain \TeX}
+        \line{Typesetting\dotsleads in plain \TeX}
+        \line{\dotsleads Typesetting in plain \TeX}
+    \endtextbox
+
+    \bfootline{Typesetting in plain \TeX}
+\endslide
+
+\beginslide
+    \bheadline
+
+    \textbox\empty{1cm}{2cm}{\hsize-2cm}{}
+        An important part of \TeX{} is the concept of {\fifteenit alignment}.
+
+        In \LaTeX{} this takes the form of environments like {\tt tabular} and {\tt array}, but alignment is even more powerful.
+
+        The main \TeX{} primitive which allows for alignment is \macroname\halign{}.
+
+        The input of \macroname\halign{} comes in two parts: the preamble and the actual alignment material.
+        The preamble of an alignment dictates how to align the material, it is simply a list of what material to place around the
+        alignment material.
+    \endtextbox
+
+    \bfootline{Typesetting in plain \TeX}
+\endslide
+
+\beginslide
+    \bheadline
+
+    \textbox\_framebox{1cm}{2cm}{\hsize-2cm}{}
+\beginhi
+\tabskip=1cm
+\halign{#\hfil&\hfil#\hfil&\hfil#\cr
+    Left Aligned&Center Aligned&Right Aligned\cr
+    Typesetting&in plain&\TeX\cr
+}
+\endhi
+    \endtextbox
+
+    \textbox\coloredbox{1cm}{\lastey+5pt}{\hsize-2cm-\colorboxbuf}{[rgb]{.9 .9 .9}}
+        \tabskip=1cm
+        \halign{#\hfil&\hfil#\hfil&\hfil#\cr
+            Left Aligned&Center Aligned&Right Aligned\cr
+            Typesetting&in plain&\TeX\cr
+        }
+    \endtextbox
+
+    \textbox\empty{1cm}{\lastey+.5cm}{\hsize-2cm}{}
+        Notice here that as opposed to \LaTeX{} where \macroname\\{} delimits the rows in an alignment, \macroname\halign{} uses
+        \macroname\cr{} (carriage return).
+
+        Here the preamble is \icode #\hfil&\hfil#\hfil&\hfil#/eicode{}
+
+        This means for the first entry of each row, the template is \icode #\hfil/eicode{}, this right aligns it.
+        What's significant about this is that the width of each entry is the maximum width of the all the entries in the column.
+
+        Similarly the second and third templates center and left-align their entries respectively.
+
+        \macroname\tabskip{} is the glue added between every column (as well as before the first and after the last column).
+    \endtextbox
+
+    \bfootline{Typesetting in plain \TeX}
+\endslide
+
+\beginslide
+    \bheadline
+
+    \textbox\empty{1cm}{2cm}{\hsize-2cm}{}
+        \macroname\tabskip{} can also be altered within the preamble of an alignment.
+
+        The glue inserted before the first column is equal to the value of \macroname\tabskip{} when \macroname\halign{} is called,
+        and subsequent changes of \macroname\tabskip{} within the preamble of the alignment alter the glue inserted after the
+        current and subsequent columns.
+    \endtextbox
+
+    \textbox\_framebox{1cm}{\lastey+.5cm}{\hsize-2cm}{}
+\beginhi
+\tabskip=0pt
+\halign{#\hfil\tabskip=1cm&\hfil#\hfil&\hfil#\tabskip=0pt\cr
+    Left Aligned&Center Aligned&Right Aligned\cr
+    Typesetting&in plain&\TeX\cr
+}
+\endhi
+    \endtextbox
+
+    \textbox\coloredbox{1cm}{\lastey+5pt}{\hsize-2cm-\colorboxbuf}{[rgb]{.9 .9 .9}}
+        \tabskip=0pt
+        \halign{#\hfil\tabskip=1cm&\hfil#\hfil&\hfil#\tabskip=0pt\cr
+            Left Aligned&Center Aligned&Right Aligned\cr
+            Typesetting&in plain&\TeX\cr
+        }
+    \endtextbox
+
+    \textbox\coloredbox{1cm}{\lastey+.5cm}{\hsize-2cm-\colorboxbuf}{[rgb]{.9 .9 .9}}
+        \tabskip=1cm
+        \halign{#\hfil&\hfil#\hfil&\hfil#\cr
+            Left Aligned&Center Aligned&Right Aligned\cr
+            Typesetting&in plain&\TeX\cr
+        }
+    \endtextbox
+
+    \textbox\empty{1cm}{\lastey+5pt}{\hsize-2cm}{}
+        For comparison, above is the output of the previous alignment.
+    \endtextbox
+
+    \bfootline{Typesetting in plain \TeX}
+\endslide
+
+\beginslide
+    \bheadline
+
+    \textbox\empty{1cm}{2cm}{\hsize-2cm}{}
+        plain \TeX{} provides the macro \macroname\ialign{} which sets \macroname\tabskip{} to $0$ and calls \macroname\halign{}.
+
+        We can also set the width of \macroname\halign{} similar to an \macroname\hbox{} via
+        
+        \tokcenterline{\macrousage\halign to <width>{...}/emacrousage{}}
+
+        Instead of \macroname\cr, we can use \macroname\crcr{} which does the same thing, but if \macroname\crcr{} comes after
+        another \macroname\cr, it does nothing.
+
+        Thus we can create a macro which is similar to \LaTeX's {\tt align} environment
+    \endtextbox
+
+    \bfootline{Typesetting in plain \TeX}
+\endslide
+
+\beginslide
+    \bheadline
+
+    \textbox\_framebox{1cm}{.5\vsize-.5\tboxh}{\hsize-2cm}{}
+\beginhi
+\def\align#1{%
+    \tabskip=0pt plus 1fil\relax%
+    \halign to \hsize{%
+        \hfil$\displaystyle##{}$\tabskip=0pt&%
+        $\displaystyle{}##$\hfil\tabskip=0pt plus 1fil\cr%
+        #1\crcr%
+    }%
+}
+
+\align{
+    \sum_{n=1}^\infty a_n &= 1\cr
+    n! &= \prod_{i=1}^n i\cr
+}
+\endhi
+    \endtextbox
+
+    \bfootline{Typesetting in plain \TeX}
+\endslide
+
+\beginslide
+    \bheadline
+
+    \textbox\coloredbox{1cm}{.5\vsize-.5\tboxh}{\hsize-2cm-\colorboxbuf}{[rgb]{.9 .9 .9}}
+        \def\align#1{%
+            \tabskip=0pt plus 1fil\relax%
+            \halign to \hsize{%
+                \hfil$\displaystyle##{}$\tabskip=0pt&%
+                $\displaystyle{}##$\hfil\tabskip=0pt plus 1fil\cr%
+                #1\crcr%
+            }%
+        }
+
+        \catcode`\_=8
+        \align{
+            \sum_{n=1}^\infty a_n &= 1\cr
+            n! &= \prod_{i=1}^n i\cr
+        }
+    \endtextbox
+
+    \bfootline{Typesetting in plain \TeX}
+\endslide
+
+\beginslide
+    \bheadline
+
+    \textbox\empty{1cm}{2cm}{\hsize-2cm}{}
+        We can use the \macroname\openup{} macro to change the amount of glue added between lines (to ``open up'' the lines).
+        This is used mostly in the context of alignment.
+    \endtextbox
+
+    \textbox\_framebox{1cm}{\lastey+5pt}{\hsize-2cm}{}
+\beginhi
+First paragraph
+
+{\openup2\jot\halign{#\cr Hello\cr There\cr}}
+
+Second paragraph
+
+\halign{#\cr Hello\cr There\cr}
+
+Third paragraph
+\endhi
+    \endtextbox
+
+    \textbox\coloredbox{1cm}{\lastey+5pt}{\hsize-2cm}{[rgb]{.9 .9 .9}}
+        First paragraph
+        
+        {\openup2\jot\halign{#\cr Hello\cr There\cr}}
+        
+        Second paragraph
+        
+        \halign{#\cr Hello\cr There\cr}
+        
+        Third paragraph
+    \endtextbox
+
+    \bfootline{Typesetting in plain \TeX}
+\endslide
+
+\beginslide
+    \bheadline
+
+    \textbox\empty{1cm}{2cm}{\hsize-2cm}{}
+        \macroname\jot{} is simply a dimension (set equal to $3$pt by plain \TeX), it is customary to use \macroname\openup{} in
+        terms of \macroname\jot s.
+
+        \macroname\openup{} is cumulative: \icode \openup1\jot\openup-1\jot/eicode, has the same effect as if nothing had been
+        done.
+
+        \macroname\openup{} changes the amount of glue added between lines, so it is necessary to keep its changes local by
+        placing it inside a group (\icode {...}/eicode).
+    \endtextbox
+
+    \bfootline{Typesetting in plain \TeX}
+\endslide
+
+\beginslide
+    \bheadline
+
+    \textbox\empty{1cm}{2cm}{\hsize-2cm}{}
+        Tokens inside the preamble of an alignment are not expanded, unless they are preceded by the \macroname\span{} primitive, 
+        which expands (ex-span-ds) the next token.
+
+        \macroname\span{} has an entirely different meaning within the alignment material, it takes the place of {\tt\&} and
+        merges the two entries into one box whose width matches with the width (including the inter-column glue) of the columns.
+
+        Within an alignment entry \macroname\omit{} omits the current template, and instead the entry uses the trivial template
+        {\tt\#}.
+
+        Thus \macroname\span{} and \macroname\omit{} can be used in conjunction for cells which span multiple columns.
+
+        Another useful primitive is \macrousage\noalign{<vertical material>}/emacrousage{} which can come after \macroname\cr{}
+        and adds {\fifteenit vertical material\/} in place of interline glue.
+    \endtextbox
+
+    \bfootline{Typesetting in plain \TeX}
+\endslide
+
+\beginslide
+    \bheadline
+
+    \textbox\_framebox{1cm}{2cm}{\hsize-2cm}{}
+\beginhi
+{\tabskip=0pt
+\openup1\jot
+\halign{#\hfil\tabskip=5pt&\hfil#\tabskip=0pt\cr
+\noalign{\hrule\vskip3pt}
+\omit\span\omit\hfil Alignment Example\hfil\cr
+\noalign{\vskip3pt\hrule\vskip\lineskip}
+Typesetting&in\cr
+plain&\TeX\cr}}
+\endhi
+    \endtextbox
+
+    \textbox\coloredbox{1cm}{\lastey+5pt}{\hsize-2cm-\colorboxbuf}{[rgb]{.9 .9 .9}}
+        {\tabskip=0pt
+        \openup1\jot
+        \halign{#\hfil\tabskip=5pt&\hfil#\tabskip=0pt\cr
+        \noalign{\hrule\vskip3pt}
+        \omit\span\omit\hfil Alignment Example\hfil\cr
+        \noalign{\vskip3pt\hrule\vskip\lineskip}
+        Typesetting&in\cr
+        plain&\TeX\cr}}
+    \endtextbox
+
+    \bfootline{Typesetting in plain \TeX}
+\endslide
+
+\beginslide
+    \bheadline
+
+    \textbox\empty{1cm}{2cm}{\hsize-2cm}{}
+        If you add a {\tt\&} before a template in an alignment's preamble, it is as if that template and all subsequent templates
+        are repeated infinitely.
+
+        So for example the preamble
+
+        \begincode
+\hfil#&&\hfil#&#\hfil
+        /endcode
+
+        Creates an alignment where the first template right-aligns, so does the next, the one after left-aligns, then
+        right-aligns, then left-aligns, and so on ({\tt RRLRLRL...})
+
+        Finally, there is another alignment primitive \macroname\valign{} which does its alignment vertically; instead of aligning
+        by rows, it aligns by columns.
+
+        The entries in \macroname\valign{} are in vertical mode.
+        It is much less common than \macroname\halign{}.
+    \endtextbox
+
+    \bfootline{Typesetting in plain \TeX}
+\endslide
+
+\beginslide
+    \bheadline
+
+    \textbox\empty{1cm}{.9cm}{\hsize-2cm}{}
+        Finally (just kidding, we have a lot more to go), let's bring together some of the concepts we've just covered and revisit
+        our \macroname\spacebox{} macro.
+
+        We can simplify it using alignment:
+    \endtextbox
+
+    \textbox\_framebox{1cm}{\lastey+5pt}{\hsize-2cm}{}
+\beginhi
+\def\spas{3pt}
+\def\alignedbox#1{%
+    \vbox{\offinterlineskip%
+        \tabskip=0pt%
+        \halign{##\tabskip=\spas&##&##\tabskip=0pt\cr
+            \noalign{\hrule}
+            \vrule&%
+            \tabskip=\spas\valign{##\cr\hbox{#1}\cr}&%
+            \vrule\cr
+            \noalign{\hrule}
+        }%
+    }%
+}
+
+\alignedbox{Typesetting in plain \TeX}
+\endhi
+    \endtextbox
+
+    \textbox\coloredbox{1cm}{\lastey+1pt}{\hsize-2cm-\colorboxbuf}{[rgb]{.9 .9 .9}}
+        \def\spas{3pt}
+        \def\alignedbox#1{%
+            \vbox{\offinterlineskip%
+                \tabskip=0pt%
+                \halign{##\tabskip=\spas&##&##\tabskip=0pt\cr
+                    \noalign{\hrule}
+                    \vrule&\tabskip=\spas\valign{##\cr\hbox{#1}\cr}&\vrule\cr
+                    \noalign{\hrule}
+                }%
+            }%
+        }
+        
+        \quitvmode\alignedbox{Typesetting in plain \TeX}
+    \endtextbox
+
+    \bfootline{Typesetting in plain \TeX}
+\endslide
+
+\beginslide
+    \bheadline
+
+    \textbox\empty{1cm}{2cm}{\hsize-2cm}{}
+        Just kidding, that wasn't simpler.
+
+        But alignment is more versatile.
+        Instead of boring rules, we will use leaders to create patterned lines, for example:
+    \endtextbox
+
+    \bfootline{Typesetting in plain \TeX}
+\endslide
+
+\beginslide
+    \bheadline
+
+    \textbox\_framebox{.5cm}{.5\vsize-.5\tboxh}{\hsize-1cm}{}
+\beginhi
+\def\hdotsline{\xleaders\hbox to 3pt{\hss.\hss}\hfil}
+\def\vdotsline{\xleaders\vbox to 3pt{\vss\hbox{.}\vss}\vfil}
+\def\dotbox#1{%
+    \vbox{\offinterlineskip%
+        \tabskip=0pt%
+        \halign{##\cr
+            \noalign{\hdotsline}
+            \valign{##\cr
+                \vdotsline\cr
+                \hbox{#1}\cr
+                \vdotsline\cr
+            }\cr
+            \noalign{\hdotsline}
+        }%
+    }%
+}
+
+\dotbox{Typesetting in plain \TeX}
+\endhi
+    \endtextbox
+
+    \bfootline{Typesetting in plain \TeX}
+\endslide
+
+\beginslide
+    \bheadline
+
+    \textbox\coloredbox{1cm}{2cm}{\hsize-2cm-\colorboxbuf}{[rgb]{.9 .9 .9}}
+        \def\squaredot{\vbox to 3pt{\vss\hbox to 3pt{\hss.\hss}\vss}}
+        \def\hdotsline{\xleaders\squaredot\hfil}
+        \def\vdotsline{\xleaders\squaredot\vfil}
+        \def\dotbox#1{%
+            \vbox{\offinterlineskip%
+                \tabskip=0pt%
+                \halign{##\cr
+                    \hdotsline\cr
+                    \valign{##\cr
+                        \vdotsline\cr
+                        \hbox{#1}\cr
+                        \vdotsline\cr
+                    }\cr
+                    \hdotsline\cr
+                }%
+            }%
+        }
+        
+        \quitvmode\dotbox{Typesetting in plain \TeX}
+    \endtextbox
+
+    \textbox\empty{1cm}{\lastey+.5cm}{\hsize-2cm}{}
+        The primary use of \macroname\valign{} here is that it puts its entries in vertical mode whose height is the maximum
+        height in the row.
+
+        \macroname\dotbox{} doesn't add space around the text, doing so isn't terribly hard though.       
+    \endtextbox
+
+    \bfootline{Typesetting in plain \TeX}
+\endslide
+
+\beginslide
+    \bheadline
+
+    \textbox\empty{1cm}{2cm}{\hsize-2cm}{}
+        \TeX{} utilizes many many registers to control the look of its output.
+        Among them are some registers containing glue and dimensions which controls the space around paragraphs and lines.
+    \endtextbox
+
+    \textbox\coloredbox{1cm}{\lastey+.5cm}{3cm}{{blue}}
+        \centerline{\color{white}\macroname\parindent}
+    \endtextbox
+
+    \textbox\empty{5cm}{\lastoy}{\hsize-6cm}{}
+        The width of indentation before the first line of a paragraph.
+        Plain \TeX{} sets this to $20$pt.
+        \macroname\parindent{} is a dimension.
+    \endtextbox
+
+    \textbox\coloredbox{1cm}{\lastey+.5cm}{3cm}{{blue}}
+        \centerline{\color{white}\macroname\parskip}
+    \endtextbox
+
+    \textbox\empty{5cm}{\lastoy}{\hsize-6cm}{}
+        The inter-paragraph glue.
+        Plain \TeX{} sets this to {\tt 0pt plus 1pt}.
+    \endtextbox
+
+    \textbox\coloredbox{1cm}{\lastey+.5cm}{3cm}{{blue}}
+        \centerline{\color{white}\macroname\leftskip}
+    \endtextbox
+
+    \textbox\empty{5cm}{\lastoy}{\hsize-6cm}{}
+        The glue added to the left of every line.
+        Plain \TeX{} sets this to {\tt 0pt}.
+    \endtextbox
+
+    \textbox\coloredbox{1cm}{\lastey+.5cm}{3cm}{{blue}}
+        \centerline{\color{white}\macroname\rightskip}
+    \endtextbox
+
+    \textbox\empty{5cm}{\lastoy}{\hsize-6cm}{}
+        The glue added to the right of every line.
+        Plain \TeX{} sets this to {\tt 0pt}.
+    \endtextbox
+
+    \textbox\empty{1cm}{\lastey+.5cm}{\hsize-2cm}{}
+        For example, if we'd like to center a paragraph we could set the left and right glue to have infinite stretchability.
+    \endtextbox
+
+    \bfootline{Typesetting in plain \TeX}
+\endslide
+
+\beginslide
+    \bheadline
+
+    \textbox\_framebox{1cm}{1cm}{\hsize-2cm}{}
+\beginhi
+{\parindent=0pt
+\leftskip=0pt plus 1fill \rightskip=0pt plus 1fill\relax
+It is not the plan of this essay to discuss the
+millennium-old problem of faith and reason. Theory is not
+my concern at the moment. I want to instead focus attention
+on a human-life situation in which the man of faith as an
+individual concrete being, with his cares and hopes,
+concerns and needs, joys and sad moments, is entangled.
+\par
+}
+\endhi
+    \endtextbox
+
+    \textbox\coloredbox{1cm}{\lastey+5pt}{\hsize-2cm-\colorboxbuf}{[rgb]{.9 .9 .9}}
+        {\parindent=0pt
+        \leftskip=0pt plus 1fill \rightskip=0pt plus 1fill\relax
+        It is not the plan of this essay to discuss the
+        millennium-old problem of faith and reason. Theory is not
+        my concern at the moment. I want to instead focus attention
+        on a human-life situation in which the man of faith as an
+        individual concrete being, with his cares and hopes,
+        concerns and needs, joys and sad moments, is entangled.
+        \par
+        }
+    \endtextbox
+
+    \textbox\empty{1cm}{\lastey+.5cm}{\hsize-2cm}{}
+        Notice that \macroname\par{} (which ends the current paragraph) must be in the same group as the paragraph.
+        Otherwise the paragraph would be ended outside the group once \macroname\leftskip{} and \macroname\rightskip{} have
+        already reverted back to their original values.
+    \endtextbox
+
+    \bfootline{Typesetting in plain \TeX}
+\endslide
+
+\beginslide
+    \bheadline
+
+    \textbox\empty{1cm}{2cm}{\hsize-2cm}{}
+        \TeX{} also provides registers for further altering the shape of a paragraph with \macroname\hangindent{} and
+        \macroname\hangafter{}.
+
+        \macroname\hangindent{} is a dimension which specifies the dimension of the ``hanging indentation''.
+
+        \macroname\hangafter{} is a number which specifies which lines will be indented.
+
+        Suppose \macroname\hangafter{} is $n$, if $n\geq0$ then the indented lines are $n+1$, $n+2$, and so on until the end of
+        the paragraph.
+
+        If $n<0$ then the indented lines are $1$, $2$, \dots, $|n|$.
+    \endtextbox
+
+    \bfootline{Typesetting in plain \TeX}
+\endslide
+
+\beginslide
+    \bheadline
+
+    \textbox\_framebox{1cm}{2cm}{\hsize-2cm}{}
+\beginhi
+{\hangindent=1cm \hangafter=-2
+Therefore, whatever I am going to say here has been derived
+not from philosophical dialectics, abstract speculation, or
+detached impersonal reflections, but from actual situations
+and experiences with which I have been confronted. Indeed,
+the term ``lecture'' also is, in this context, a misnomer.
+\par}
+\endhi
+    \endtextbox
+
+    \textbox\coloredbox{1cm}{\lastey+5pt}{\hsize-2cm-\colorboxbuf}{[rgb]{.9 .9 .9}}
+        {\hangindent=1cm \hangafter=-2
+        Therefore, whatever I am going to say here has been derived
+        not from philosophical dialectics, abstract speculation, or
+        detached impersonal reflections, but from actual situations
+        and experiences with which I have been confronted. Indeed,
+        the term ``lecture'' also is, in this context, a misnomer.
+        \par}
+    \endtextbox
+
+    \bfootline{Typesetting in plain \TeX}
+\endslide
+
+\beginslide
+
+    {\def\_buffer_height{10pt}
+    \textbox\framecoloredbox{1cm}{.5\vsize-.5\tboxh}{\hsize-2cm}{{blue}}
+        \centerline{\headerfont\color{white}\fakebold{Questions?}}
+    \endtextbox
+    }
+
+\endslide
+
+\beginslide
+
+    {\def\_buffer_height{10pt}
+    \textbox\framecoloredbox{1cm}{.5\vsize-.5\tboxh}{\hsize-2cm}{{orange}}
+        \centerline{\headerfont\color{white}\fakebold{Macros and Primitives}}
+    \endtextbox
+    }
+
+\endslide
+
+\beginslide
+    \oheadline
+
+    \textbox\empty{1cm}{2cm}{\hsize-2cm}{}
+        While many modern languages provide some form of functions (or procedures, or subroutines), \TeX{} does not.
+        Instead \TeX{} is a macro-based language.
+
+        This makes sense since \TeX's purpose is to typeset, not program.
+        A macro is simply something which takes input and swaps it with some output.
+
+        Some other languages, like C, also have macros.
+        For example
+
+{\bgroup\lccode`\?=`\# \lowercase{\egroup\appendlist{initcolors}{{?}{.5 0 0}}}
+\beginhi
+#define MACRO(a) (Input is a)
+MACRO(hello)
+\endhi
+}
+
+        Will create a file containing the line {\tt Input is hello} if the C preprocessor is run on it.
+
+        \TeX{} macros are similar: they take input and swap it with some output within the document.
+        For example
+
+\beginhi
+\def\macro#1{Input is #1}
+\macro{hello}
+\endhi
+
+        Will create output with the line {\tt Input is hello} once it is compiled.
+
+        But this is a simple example; \TeX{} macros are far more powerful than C's.
+        In fact, \TeX{} is Turing Complete, meaning any algorithm can be written using \TeX{} (Church-Turing
+        {\fifteenit hypothesis} be damned).
+    \endtextbox
+
+    \ofootline{Macros and primitives}
+\endslide
+
+\bye

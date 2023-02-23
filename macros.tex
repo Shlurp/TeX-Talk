@@ -1,0 +1,189 @@
+\newdimen\o@baselineskip    \o@baselineskip=\baselineskip
+\newdimen\o@lineskip        \o@lineskip=\lineskip
+\newdimen\o@lineskiplimit   \o@lineskiplimit=\lineskiplimit
+\def\_revertinterlineskip{\baselineskip=\o@baselineskip \lineskip=\o@lineskip \lineskiplimit=\o@lineskiplimit}
+\offinterlineskip
+\pdfpagewidth=20cm
+\pdfpageheight=15cm
+\pdfhorigin=0cm
+\pdfvorigin=0cm
+\hsize=\pdfpagewidth
+\vsize=\pdfpageheight
+\parindent=0pt
+\parskip=4pt plus 2pt
+
+\def\glet{\global\let}
+
+\font\titlefont=cmcsc10 at 40pt
+\font\headerfont=cmcsc10 at 25pt
+\font\fifteenrm=cmr10 at 15pt       \textfont0=\fifteenrm
+\font\elevenrm= cmr10 at 11pt       \scriptfont0=\elevenrm
+\font\fifteenbf=cmbx10 at 15pt
+\font\fifteenit=cmti10 at 15pt
+\font\fifteentt=cmtt10 at 15pt      \def\tt{\fifteentt}
+\font\fifteensy=cmsy10 at 15pt      \textfont2=\fifteensy
+\font\elevensy= cmsy10 at 11pt      \scriptfont2=\elevensy
+\font\fifteenmi=cmmi10 at 15pt      \textfont1=\fifteenmi
+\font\elevenmi= cmmi10 at 11pt      \scriptfont1=\elevenmi
+\font\fifteenex=cmex10 at 15pt      \textfont3=\fifteenex
+
+\fifteenrm
+
+\font\lAtexrm = cmr7 scaled 1500
+\font\lAtexbf = cmbx7 scaled 1500
+\def\LaTeX{L\kern-.36em{\setbox0=\hbox{T}\vbox to\ht0{\hbox{\lAtexrm A}\vss}}\kern-.15em\TeX}
+\def\boldLaTeX{L\kern-.36em{\setbox0=\hbox{T}\vbox to\ht0{\hbox{\lAtexbf A}\vss}}\kern-.15em\TeX}
+
+\def\flip#1{{\setbox0=\hbox{#1}\kern\wd0\pdfliteral{q -1 0 0 1 0 0 cm}\rlap{#1}\pdfliteral{Q}}}
+\def\XeTeX{X\kern-.125em\lower.5ex\hbox{\flip{E}}\kern-.1667em\TeX}
+
+\font\fifteensy=cmsy10 at 15pt
+\def\tbullet{{\fifteensy\char"0F}}
+
+\def\@blist[#1]{%
+    \bgroup\par%
+    \def\item{%
+        \par\egroup\bgroup\medskip\setbox0=\hbox{#1\quad}%
+        \advance\leftskip by \wd0\leavevmode\kern-\wd0\box0%
+    }%
+    \bgroup%
+}
+\def\blist{\@ifnextchar[ \@blist {\@blist[\tbullet]}}
+\def\elist{\par\egroup\egroup\medskip}
+
+\newcount\enumcount
+\def\enumstyle#1{$(#1)$}
+\def\benum{\bgroup\par%
+    \enumcount=0 %
+    \def\item{%
+        \par\egroup\advance\enumcount by 1\bgroup\medskip%
+        \setbox0=\hbox{\enumstyle{\the\enumcount}\quad}%
+        \advance\leftskip by \wd0\leavevmode\kern-\wd0\box0%
+    }%
+    \bgroup%
+}
+\def\eenum{\par\egroup\egroup\par\medskip}
+
+\long\def\macroname#1{{\fifteentt\string#1}}
+
+\let\bslash=/
+{\catcode`\<=\active 
+\gdef\macrousage{\bgroup\setbox0=\hbox\bgroup\fifteentt%
+    \catcode`\ =\active%
+    \catcode`\/=0%
+    \catcode`\{=12%
+    \catcode`\}=12%
+    \catcode`\$=12%
+    \catcode`\\=12%
+    \catcode`\<=\active%
+    \def<##1>{{\fifteensy\char"68\fifteenit##1\/\fifteensy\char"69}}%
+}}
+\def\emacrousageB{\egroup\par\smallskip\centerline{\box0}\egroup\par\smallskip}
+\def\emacrousage{\egroup\quitvmode\box0\egroup}
+
+\chardef\fslash=`\/
+{\catcode`\^^M=\active%
+\gdef\begincode{%
+    \bgroup\everypar={}%
+    \medskip%
+    \setbox0=\vbox\bgroup%
+    \global\dimen69=0pt%
+    \tt%
+    \catcode`\^^M=\active%
+    \def^^M{\egroup\ifnum\wd1>\dimen69 \global\dimen69=\wd1\fi\copy1\setbox1=\hbox\bgroup}%
+    \catcode`\ =\active%
+    \catcode`\{=12%
+    \catcode`\}=12%
+    \catcode`\/=0%
+    \catcode`\$=12%
+    \catcode`\\=12%
+    \catcode`\#=12%
+    \catcode`\&=12%
+    \catcode`\%=12 \setbox1=\hbox\bgroup}}
+\def\endcode{%
+    \egroup\egroup%
+    \hfil\hbox to \dimen69{\box0}\hfil\par%
+    \medskip%
+    %\let\@par=\par%
+    \egroup%
+}
+
+\def\icode{\bgroup\fifteentt%
+    \catcode`\ =\active%
+    \catcode`\/=0%
+    \catcode`\{=12%
+    \catcode`\}=12%
+    \catcode`\$=12%
+    \catcode`\\=12%
+    \catcode`\&=12%
+    \catcode`\#=12%
+}
+\def\eicode{\egroup}
+
+\newbox\b@xit
+\def\demo@boxit#1#2{%
+    \setbox\b@xit=\hbox{#1}%
+    \vbox{%
+        \hrule width \dimexpr \wd\b@xit + #2 * 2\relax height #2%
+        \hbox{%
+            \vrule height \ht\b@xit width #2%
+            \rlap{\vrule width \wd\b@xit height #2}%
+            \copy\b@xit%
+            \vrule height \ht\b@xit width #2%
+        }%
+        \hrule width \dimexpr \wd\b@xit + #2 * 2\relax height #2%
+    }%
+}
+
+\def\hband#1#2#3{%
+    \hbox{%
+        \vrule width #3 height #2%
+        \vrule width #1 height \dimexpr #3 + #2 / 2\relax  depth \dimexpr -#2 / 2\relax%
+        \vrule width #3 height #2%
+    }%
+}
+
+\def\vband#1#2#3{%
+    \vbox{%
+        \hrule width #1 height #3%
+        \hbox to #1{\hss\vrule height #2 width #3\hss}%
+        \hrule width #1 height #3%
+    }%
+}
+
+\def\demobox@formatdimens#1#2{%
+    \bgroup\tt\offinterlineskip%
+    \halign{\hfil##\quad\hfil&\hfil##\cr
+         &#1\cr
+        +&#2\cr%
+    }%
+    \egroup%
+}
+
+\newdimen\dem@b@xbandwidth \newdimen\dem@b@xbandheight
+\dem@b@xbandwidth=5pt      \dem@b@xbandheight=0.1pt
+\newbox\dem@b@x
+\newbox\demobox@dimens
+
+\def\demobox#1{%
+    \setbox\dem@b@x=\hbox{#1}%
+    \setbox\demobox@dimens=\vbox{\demobox@formatdimens{\the\ht\dem@b@x}{\the\dp\dem@b@x}}%
+    \vbox{%
+        \baselineskip=5pt%
+        \hbox to \dimexpr \dem@b@xbandwidth + 4pt + \wd\demobox@dimens + \wd\dem@b@x + \dem@b@xbandheight * 2\relax{%
+            \hfil\hbox to \wd\dem@b@x{\tt\hss\the\wd\dem@b@x\hss}%
+        }%        
+        \hbox to \dimexpr \dem@b@xbandwidth + 4pt + \wd\demobox@dimens + \wd\dem@b@x + \dem@b@xbandheight * 2\relax{%
+            \hfil\hband{\wd\dem@b@x}{\dem@b@xbandwidth}{\dem@b@xbandheight}%
+        }%
+        \hbox{%
+            \raise\dimexpr(\ht\dem@b@x + \dp\dem@b@x - \ht\demobox@dimens)/2\relax\copy\demobox@dimens%
+            \kern2pt%
+            \vband{\dem@b@xbandwidth}{\dimexpr \ht\dem@b@x + \dp\dem@b@x\relax}{\dem@b@xbandheight}%
+            \kern2pt%
+            \demo@boxit{#1}{\dem@b@xbandheight}%
+        }%
+    }%
+}
+
+\def\newbox{\alloc@4\box\chardef\insc@unt}

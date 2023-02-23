@@ -1,0 +1,64 @@
+\input syntax-hi
+\input macros
+
+%\let\_output_line_number=\@gobble
+
+\def\_curr_pagecolor{[rgb]{1 1 1}}
+\def\_beginslide{\setbox0=\vbox\bgroup\@xp\pagecolor\_curr_pagecolor}
+\def\_beginslide_color#1{\def\_curr_pagecolor{#1}\_beginslide}
+\def\beginslide{\@ifnextchar\bgroup \_beginslide_color\_beginslide}
+\def\endslide{\egroup\shipout\box0\relax}
+
+\def\frameboxbuf{\_buffer_width * 2 - \_frame_width * 2}
+\def\colorboxbuf{\_buffer_width * 2}
+\def\_textbox#1{%
+    \setbox\_colorbox=\vbox\bgroup%
+        \hsize=\dimexpr #1\relax%\dimexpr #1 - \_buffer_width * 2 - \_frame_width * 2\relax%
+        \_revertinterlineskip
+}
+
+\def\_textbox_reg#1#2#3#4#5{%
+    \def\_regA{#1}\def\_regB{\dimexpr#2\relax}\def\_regC{\dimexpr#3\relax}\def\_regD{#5}%
+    \_textbox{#4}%
+}
+\def\_textbox_tagged[#1]#2#3#4#5#6{%
+    \def\_regS{#1}\_textbox_reg{#2}{#3}{#4}{#5}{#6}%
+}
+\def\textbox{\bgroup\let\_regS=\undefined \@ifnextchar[ \_textbox_tagged\_textbox_reg}
+
+\newdimen\tboxw
+\newdimen\tboxh
+\newdimen\lastox
+\newdimen\lastoy
+\newdimen\lastex
+\newdimen\lastey
+\def\endtextbox{%
+    \par\egroup%
+    \setbox\_colorbox=\hbox{\@xp\_regA\_regD{\box\_colorbox}}%
+    \tboxw=\wd\_colorbox%
+    \tboxh=\dimexpr\ht\_colorbox + \dp\_colorbox\relax%
+    \unless\ifx\_regS\undefined%
+        \@xp\xdef\csname p@\_regS @ox\endcsname{\the\_regB}%
+        \@xp\xdef\csname p@\_regS @oy\endcsname{\the\_regC}%
+        \@xp\xdef\csname p@\_regS @ex\endcsname{\the\dimexpr\_regB+\tboxw\relax}%
+        \@xp\xdef\csname p@\_regS @ey\endcsname{\the\dimexpr\_regC+\tboxh\relax}%
+    \fi%
+    \vbox to0pt{\kern\_regC\hbox to0pt{\kern\_regB\box\_colorbox\hss}\vss}
+    \global\lastox=\_regB%
+    \global\lastoy=\_regC%
+    \global\lastex=\dimexpr\_regB+\tboxw\relax%
+    \global\lastey=\dimexpr\_regC+\tboxh\relax%
+\egroup}
+
+\def\headline#1#2#3{%
+    \textbox\framecoloredbox{.5\hsize-.5\tboxw}{0pt}{\hsize-\frameboxbuf}{{#1}}
+        \centerline{\color{#2}#3}
+    \endtextbox
+}
+
+\def\footline#1#2#3{%
+    \textbox\framecoloredbox{.5\hsize-.5\tboxw}{\vsize - \tboxh}{\hsize-\frameboxbuf}{{#1}}
+        \centerline{\color{#2}#3}
+    \endtextbox
+}
+
