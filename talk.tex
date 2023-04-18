@@ -622,7 +622,7 @@ Width: \the\wd0, Height: \the\ht0, Depth: \the\dp0
 \beginslide
     \bheadline
 
-    \textbox\empty{1cm}{2cm}{\hsize-2cm}{}
+    \textbox\empty{1cm}{1cm}{\hsize-2cm}{}
         So the vertical list looks like
 
 \begincode
@@ -1490,7 +1490,7 @@ the term ``lecture'' also is, in this context, a misnomer.
         Some other languages, like C, also have macros.
         For example
 
-{\bgroup\lccode`\?=`\# \lowercase{\egroup\appendlist{initcolors}{{?}{.5 0 0}}}
+{\bgroup\lccode`\?=`\# \lowercase{\egroup\appendlist{initcolors}{{?}{\_nextother}{.5 0 0}}}
 \beginhi
 #define MACRO(a) (Input is a)
 MACRO(hello)
@@ -1510,8 +1510,415 @@ MACRO(hello)
         Will create output with the line {\tt Input is hello} once it is compiled.
 
         But this is a simple example; \TeX{} macros are far more powerful than C's.
-        In fact, \TeX{} is Turing Complete, meaning any algorithm can be written using \TeX{} (Church-Turing
-        {\fifteenit hypothesis} be damned).
+        In fact, \TeX{} is Turing Complete, meaning any algorithm can be written using \TeX{}.
+    \endtextbox
+
+    \ofootline{Macros and primitives}
+\endslide
+
+\beginslide
+    \oheadline
+
+    \textbox\empty{1cm}{2cm}{\hsize-2cm}{}
+        \TeX{} macros are marked by the use of a {\fifteenit escape character}, which is usually the backslash
+        {\fifteentt\char"5C}.
+
+        Calling these {\fifteenit macros} is actually incorrect, what follows an escape character is a {\fifteenit control
+        sequence}.
+        There are two types of control sequences: a {\fifteenit control word} which is a sequence of {\fifteenit letters} followed
+        by a non-letter, for example \macroname\sqrt.
+        And a {\fifteenit control letter} is a control sequence consisting of a single non-letter, for example \macroname\".
+
+        A critical difference between control words and letters is that \TeX{} will always ignore a space after a control word (can you
+        think of why?) while it will not ignore a space after a control letter.
+
+        Some of \TeX's control sequences are {\fifteenit primitives}, these are control sequences which are not decomposable into
+        simpler functions.
+        \TeX's primitives form the backbone on which the rest of \TeX{} is defined.
+        Some examples of primitives are \macroname\input{} and \macroname\hbox.
+
+        You can define your own control sequences, called {\fifteenit macros} using primitives like \macroname\def{}.
+        This section will focus on this.
+    \endtextbox
+
+    \ofootline{Macros and primitives}
+\endslide
+
+\beginslide
+    \oheadline
+
+    \textbox\empty{1cm}{2cm}{\hsize-2cm}{}
+        The general usage of the \macroname\def{} primitive is:
+
+\vskip5pt
+\tokcenterline{\macrousage
+\def<control sequence><parameter text>{<replacement text>}
+/emacrousage}
+\vskip5pt
+
+        Which defines a control sequence which matches text to {\fifteenit parameter text} and replaces it with the
+        {\fifteenit replacement text}.
+        A simple example is as follows:
+
+    \endtextbox
+
+    \textbox\_framebox{1cm}{\lastey+.5cm}{\hsize-2cm}{}
+\beginhi
+\def\silly ABC{abc}
+
+\silly ABCDEFG
+\endhi
+    \endtextbox
+
+    \textbox\coloredbox{1cm}{\lastey+5pt}{\hsize-2cm-\colorboxbuf}{[rgb]{.9 .9 .9}}
+        \def\silly ABC{abc}
+        
+        \silly ABCDEFG
+    \endtextbox
+
+    \ofootline{Macros and primitives}
+\endslide
+
+\beginslide
+    \oheadline
+
+    \textbox\empty{1cm}{2cm}{\hsize-2cm}{}
+        Within the {\tt parameter text} of a macro we can define parameters using the special character {\tt\#}.
+        A parameter is denoted by {\tt\#N} where {\tt N} is a number between $1$ and $9$, and the parameters must be ordered sequentially.
+
+        The parameter text of a macro is matched lazily, ie. the first instance of a pattern will be matched.
+        For example:
+    \endtextbox
+
+    \textbox\_framebox{1cm}{\lastey+.5cm}{\hsize-2cm}{}
+\beginhi
+\def\sillier A#1C{a(#1)c}
+
+\sillier ABCABC
+\endhi
+    \endtextbox
+
+    \textbox\coloredbox{1cm}{\lastey+5pt}{\hsize-2cm-\colorboxbuf}{[rgb]{.9 .9 .9}}
+        \def\sillier A#1C{a(#1)c}
+        
+        \sillier ABCABC
+    \endtextbox
+
+    \ofootline{Macros and primitives}
+\endslide
+
+\beginslide
+    \oheadline
+
+    \textbox\empty{1cm}{1.5cm}{\hsize-2cm}{}
+        When pattern-matching for a macro, \TeX{} will consider groups of tokens contained within braces (\icode {...}/eicode) to be a
+        single atomic unit, and will not match it or the tokens contained within it to a non-parameter.
+
+        If no delimiter follows a parameter in the parameter text, the parameter is whatever the next group of tokens is.
+        That is, if the next tokens are contained within braces: \icode {...}/eicode, then the whole group is taken as the parameter
+        (without the braces), and if it's a single token then that token is taken.
+
+        For example:
+    \endtextbox
+
+    \textbox\_framebox{1cm}{\lastey+5pt}{\hsize-2cm}{}
+\beginhi
+\def\silliness#1{(#1)}
+\def\sillier A#1C{a(#1)c}
+
+\silliness{abc}def  % #1 = abc
+                                 
+\silliness abcdef   % #1 = a
+
+\sillier AB{BC}C    % #1 = B{BC}
+\endhi
+    \endtextbox
+
+    \textbox\coloredbox{1cm}{\lastey+5pt}{\hsize-2cm-\colorboxbuf}{[rgb]{.9 .9 .9}}
+        \def\silliness#1{(#1)}
+        \def\sillier A#1C{a(#1)c}
+        
+        \silliness{abc}def
+
+        \silliness abcdef
+
+        \sillier AB{BC}C
+    \endtextbox
+
+    \ofootline{Macros and primitives}
+\endslide
+
+\beginslide
+    \oheadline
+
+    \textbox\empty{1cm}{2cm}{\hsize-2cm}{}
+        A small note to remember is that while:
+        \begincode
+            \def\macro#1#2{...}
+            \def\macro #1#2{...}
+        /endcode
+        are equivalent,
+        \begincode
+            \def\macro#1#2{...}
+            \def\macro #1 #2 {...}
+        /endcode
+        are not.
+        The second \macroname\macro's parameters must be delimited with spaces, while the first's are not.
+    \endtextbox
+
+    \ofootline{Macros and primitives}
+\endslide
+
+\beginslide
+    \oheadline
+
+    \textbox\empty{1cm}{2cm}{\hsize-2cm}{}
+        Before we get to writing some funky macros, let's first discuss a handful of very useful \TeX{} primitives.
+    \endtextbox
+
+    \textbox\coloredbox{1cm}{\lastey+.5cm}{3.5cm}{{orange}}
+        \centerline{\color{white}\macroname\expandafter}
+    \endtextbox
+
+    \textbox\empty{5cm}{\lastoy}{\hsize-6cm}{}
+        \macrousage\expandafter<token1><token2>/emacrousage: \TeX{} ignores {\it token1\/} at first, expands {\it token2\/} (once) and then
+        places {\it token1\/} before the expansion.
+    \endtextbox
+
+    \textbox\coloredbox{1cm}{\lastey+.5cm}{3.5cm}{{orange}}
+        \centerline{\color{white}\macroname\csname}
+        \centerline{\color{white}\macroname\endcsname}
+    \endtextbox
+
+    \textbox\empty{5cm}{\lastoy}{\hsize-6cm}{}
+        \macrousage\csname...\endcsname/emacrousage: \TeX{} reads the tokens between\hfill\penalty-1000
+        \macroname\csname{} and \macroname\endcsname{} and totally expands them.
+        After this expansion, only ASCII must remain and \TeX{} replaces this with a control sequence token whose name is this expansion.
+        If this control sequence is undefined currently, this control sequence token is defined to be \macroname\relax.
+    \endtextbox
+
+    \textbox\coloredbox{1cm}{\lastey+.5cm}{3.5cm}{{orange}}
+        \centerline{\color{white}\macroname\string}
+    \endtextbox
+
+    \textbox\empty{5cm}{\lastoy}{\hsize-6cm}{}
+        \macrousage\string<token>/emacrousage: \TeX{} reads {\it token\/} without expanding it, and if it is a control sequence, it converts
+        it to a token list of characters (of category {\tt other} other than spaces) which corresponds to its name, following the escape
+        character token.
+        If {\it token} is a character, it is preserved.
+    \endtextbox
+
+    \ofootline{Macros and primitives}
+\endslide
+
+\beginslide
+    \oheadline
+
+    \textbox\_framebox{1cm}{2cm}{\hsize-2cm}{}
+\beginhi
+\def\gobble#1{}
+\def\strip{\expandafter\gobble\string}
+
+\def\initstring#1#2{%
+    \expandafter\edef\csname s@#1 \endcsname{#2}}   % Why is \expandafter necessary?
+\def\printstring#1{\csname s@#1 \endcsname}
+\def\appendstring#1#2{%
+    \expandafter\edef\csname s@#1 \endcsname{\printstring{#1}\printstring{#2}}}
+
+\initstring{first string}{Hello}
+\initstring{second string}{ World!}
+\appendstring{first string}{second string}
+\printstring{first string}
+\endhi
+    \endtextbox
+
+    \textbox\coloredbox{1cm}{\lastey+5pt}{\hsize-2cm}{[rgb]{.9 .9 .9}}
+        \def\gobble#1{}
+        \def\strip{\expandafter\gobble\string}
+        
+        \def\initstring#1#2{%
+            \expandafter\edef\csname s@#1 \endcsname{#2}}
+        \def\printstring#1{\csname s@#1 \endcsname}
+        \def\appendstring#1#2{%
+        	\expandafter\edef\csname s@#1 \endcsname{\printstring{#1}\printstring{#2}}}
+        
+        \initstring{first string}{Hello}
+        \initstring{second string}{ World!}
+        \appendstring{first string}{second string}
+        \printstring{first string}
+    \endtextbox
+
+    \ofootline{Macros and primitives}
+\endslide
+
+\beginslide
+    \oheadline
+
+    \textbox\empty{1cm}{2cm}{\hsize-2cm}{}
+        \TeX, like any programming language, provides support for conditionals.
+        \TeX{} conditionals have the form
+
+        \tokcenterline{\macrousage\ifX<condition> ... \fi/emacrousage }
+
+        where \macroname\ifX{} is any one of the \TeX{} conditional primitives.
+        \TeX{} also has support for \macroname\else s.
+    \endtextbox
+
+    \textbox\coloredbox{1cm}{\lastey+.5cm}{2cm}{{orange}}
+        \centerline{\color{white}\macroname\if}
+    \endtextbox
+
+    \textbox\empty{4cm}{\lastoy}{\hsize-5cm}{}
+        \macrousage\if<token1><token2>/emacrousage: \macroname\if{} expands whatever comes after it until it finds two
+        unexpandable checks if both tokens have the same character code, that is they represent the same character.
+
+        If one of the tokens is a control sequence, if it has been \macroname\let{} equal to some non-active character then it is
+        considered to have the same category code and character code as that character (at the time that it was \macroname\let).
+        Otherwise it is considered to have category code and character code incompatible with normal characters, but comparing
+        two macros will be true.
+    \endtextbox
+
+    \textbox\coloredbox{1cm}{\lastey+.5cm}{2cm}{{orange}}
+        \centerline{\color{white}\macroname\ifcat}
+    \endtextbox
+
+    \textbox\empty{4cm}{\lastoy}{\hsize-5cm}{}
+        \macrousage\ifcat<token1><token2>/emacrousage: the same rules apply to \macroname\ifcat{} as \macroname\if, but the
+        category codes are compared instead of the character codes.
+
+        In order to supress the expansion of active characters, you must prepend them with \macroname\noexpand.
+    \endtextbox
+
+    \ofootline{Macros and primitives}
+\endslide
+
+\beginslide
+    \oheadline
+
+    \textbox\coloredbox{1cm}{2cm}{2cm}{{orange}}
+        \centerline{\color{white}\macroname\ifx}
+    \endtextbox
+
+    \textbox\empty{4cm}{\lastoy}{\hsize-5cm}{}
+        \macrousage\ifx<token1><token2>/emacrousage: the tokens are {\it not} expanded.
+        \macroname\ifx{} checks that both the category code and the character code of the tokens match if they are characters (or
+        \macroname\let{} equal to characters).
+        If the tokens are control sequences, \macroname\ifx{} checks that they have the same expansion (if they are primitives
+        then it checks that they are the same primitive).
+    \endtextbox
+
+    \textbox\coloredbox{1cm}{\lastey+.5cm}{2cm}{{orange}}
+        \centerline{\color{white}\macroname\ifnum}
+    \endtextbox
+
+    \textbox\empty{4cm}{\lastoy}{\hsize-5cm}{}
+        \macrousage\ifnum<num1><relation><num2>/emacrousage: compares two integers {\it num1}\hfill\break and {\it num2}.
+        {\it relation} must be either {\tt=}, {\tt<}, or {\tt>} with category code $12$.
+    \endtextbox
+
+    \ofootline{Macros and primitives}
+\endslide
+
+\beginslide
+    \oheadline
+
+    \textbox\empty{1cm}{1.5cm}{\hsize-2cm}{}
+        The following powerful primitives give us tools to change the flow of expansion.
+    \endtextbox
+
+    \textbox\coloredbox{1cm}{\lastey+.5cm}{4.5cm}{{orange}}
+        \centerline{\color{white}\macroname\expanded}
+    \endtextbox
+
+    \textbox\empty{6cm}{\lastoy}{\hsize-7cm}{}
+        \macrousage\expanded{<tokens>}/emacrousage: This will totally expand {\it tokens}, similar to \macroname\edef{} but
+        \macroname\expanded{} is itself expandable.
+
+        This is a pdf\TeX{} primitive.
+    \endtextbox
+
+    \textbox\coloredbox{1cm}{\lastey+.5cm}{4.5cm}{{orange}}
+        \centerline{\color{white}\macroname\unexpanded}
+    \endtextbox
+
+    \textbox\empty{6cm}{\lastoy}{\hsize-7cm}{}
+        \macrousage\expanded{<tokens>}/emacrousage: The expansion is {\it tokens}, this\hfil\break means that when placed inside
+        an expansion-only environment like \macroname\expanded{}, {\it tokens} are not expanded.
+
+        This is a $\epsilon$-\TeX{} primitive.
+    \endtextbox
+
+    \textbox\coloredbox{1cm}{\lastey+.5cm}{4.5cm}{{orange}}
+        \centerline{\color{white}\macroname\futurelet}
+    \endtextbox
+
+    \textbox\empty{6cm}{\lastoy}{\hsize-7cm}{}
+        \macrousage\futurelet\<macro><token1><token2>/emacrousage: This is\hfil\break effectively the same as
+
+        \tokcenterline{\macrousage \let\<macro>=<token2><token1><token2>/emacrousage }
+        This is very useful when you want to look ahead at the next token in the stream without removing it from the stream.
+    \endtextbox
+
+    \textbox\coloredbox{1cm}{\lastey+.5cm}{4.5cm}{{orange}}
+        \centerline{\color{white}\macroname\aftergroup}
+    \endtextbox
+
+    \textbox\empty{6cm}{\lastoy}{\hsize-7cm}{}
+        \macrousage\aftergroup<token>/emacrousage: {\it token} is inserted after the current group.
+    \endtextbox
+
+    \textbox\coloredbox{1cm}{\lastey+.5cm}{4.5cm}{{orange}}
+        \centerline{\color{white}\macroname\afterassignment}
+    \endtextbox
+
+    \textbox\empty{6cm}{\lastoy}{\hsize-7cm}{}
+        \macrousage\afterassignment<token>/emacrousage: {\it token} is inserted after the next assignment (\macroname\def,
+        \macroname\let, a register assignment like \macroname\setbox, etc).
+    \endtextbox
+
+    \ofootline{Macros and primitives}
+\endslide
+
+\beginslide
+    \oheadline
+
+    \textbox\empty{1cm}{2cm}{\hsize-2cm}{}
+        Let us now show some uses of \macroname\futurelet{} and \macroname\afterassignment.
+        A good example of these primitives are the handy \LaTeX{} macros \macroname\@ifnextchar{} and \macroname\@ifstar.
+
+        The general uses are as follows:
+    \endtextbox
+
+    \textbox\coloredbox{1cm}{\lastey+.5cm}{3.5cm}{{orange}}
+        \centerline{\color{white}\macroname\@ifnextchar}
+    \endtextbox
+
+    \textbox\empty{5cm}{\lastoy}{\hsize-7cm}{}
+        \macrousage\@ifnextchar<token1>{<true>}{<false>}<token2>/emacrousage: if {\it token1} and {\it token2} are equal then
+        {\it true} is inserted into the sream (it is run), otherwise {\it false} is.
+        This is done without removing {\it token2} from the stream.
+    \endtextbox
+
+    \textbox\coloredbox{1cm}{\lastey+.5cm}{3.5cm}{{orange}}
+        \centerline{\color{white}\macroname\@ifstar}
+    \endtextbox
+
+    \textbox\empty{5cm}{\lastoy}{\hsize-7cm}{}
+        \macrousage\@ifstar{<true>}{<false>}<token>/emacrousage: if {\it token} is an asterisk ({\tt*}), {\it true} is inserted
+        into the sream (it is run), otherwise {\it false} is.
+
+        As opposed to just running \icode \@ifnextchar*/eicode, the asterisk is removed in the case that {\it token} is an
+        asterisk.
+    \endtextbox
+
+    \ofootline{Macros and primitves}
+\endslide
+
+\beginslide
+    \oheadline
+
+    \textbox\empty{1cm}{2cm}{\hsize-2cm}{}
+        A naive implementation of 
     \endtextbox
 
     \ofootline{Macros and primitives}
