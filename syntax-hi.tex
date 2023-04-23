@@ -204,16 +204,19 @@
 
 \def\beginhi{\_getline\_beginhi}
 
+\def\syntax@buf{0cm}
 \def\syntaxbg{.95 .95 1}
 \def\endhi{%
     \egroup\egroup%\kern\_output_indent\egroup%
     \par%
+    \vskip\syntax@buf\relax%
     \hbox to\dimexpr\wd\_hibox + \_output_indent\relax{%
         \@color{\syntaxbg}{\vrule height\ht\_hibox width\dimexpr\wd\_hibox+\_output_indent\relax depth\dp\_hibox}%
         \kern-\wd\_hibox\box\_hibox%
     }%
     \par%
     \egroup%
+    \vskip\syntax@buf\relax%
 }
 
 \newbox\_outputbox

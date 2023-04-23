@@ -1,3 +1,5 @@
+\catcode`\@=11
+
 \newdimen\o@baselineskip    \o@baselineskip=\baselineskip
 \newdimen\o@lineskip        \o@lineskip=\lineskip
 \newdimen\o@lineskiplimit   \o@lineskiplimit=\lineskiplimit
@@ -19,8 +21,8 @@
 \font\fifteenrm=cmr10 at 15pt       \textfont0=\fifteenrm
 \font\elevenrm= cmr10 at 11pt       \scriptfont0=\elevenrm
 \font\fifteenbf=cmbx10 at 15pt
-\font\fifteenit=cmti10 at 15pt
-\font\fifteentt=cmtt10 at 15pt      \def\tt{\fifteentt}
+\font\fifteenit=cmti10 at 15pt      \def\it{\fifteenit}
+\font\fifteentt=cmtt10 at 15pt      \def\tt{\fifteentt} \textfont0=\fifteentt
 \font\fifteensy=cmsy10 at 15pt      \textfont2=\fifteensy
 \font\elevensy= cmsy10 at 11pt      \scriptfont2=\elevensy
 \font\fifteenmi=cmmi10 at 15pt      \textfont1=\fifteenmi
@@ -83,14 +85,14 @@
 
 \chardef\fslash=`\/
 {\catcode`\^^M=\active%
-\gdef\begincode{%
+\gdef\_begincode#1{%
     \bgroup\everypar={}%
-    \medskip%
+    \smallskip%
     \setbox0=\vbox\bgroup%
     \global\dimen69=0pt%
     \tt%
     \catcode`\^^M=\active%
-    \def^^M{\egroup\ifnum\wd1>\dimen69 \global\dimen69=\wd1\fi\copy1\setbox1=\hbox\bgroup}%
+    \def^^M{\egroup\ifnum\wd1>\dimen69 \global\dimen69=\wd1\fi\copy1\setbox1=\hbox\bgroup\strut}%
     \catcode`\ =\active%
     \catcode`\{=12%
     \catcode`\}=12%
@@ -99,11 +101,12 @@
     \catcode`\\=12%
     \catcode`\#=12%
     \catcode`\&=12%
-    \catcode`\%=12 \setbox1=\hbox\bgroup}}
+    \catcode`\%=12 \setbox1=\hbox\bgroup\strut}}
+\def\begincode{\_getline\_begincode}
 \def\endcode{%
     \egroup\egroup%
-    \hfil\hbox to \dimen69{\box0}\hfil\par%
-    \medskip%
+    \centerline{\hbox to \dimen69{\box0}}%
+    \smallskip%
     %\let\@par=\par%
     \egroup%
 }
@@ -117,6 +120,10 @@
     \catcode`\\=12%
     \catcode`\&=12%
     \catcode`\#=12%
+    \catcode`\^=12%
+    \catcode`\_=12%
+    \catcode`\~=12%
+    \catcode`\%=12%
 }
 \def\eicode{\egroup}
 

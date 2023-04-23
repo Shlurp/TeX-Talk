@@ -28,7 +28,7 @@
     
     \textbox\framecoloredbox{.5\hsize-.5\tboxw}{\p@title@ey+1cm}{10cm}{{blue}}
     \centerline{\color{white}Slurp}
-    \centerline{\color{white}February, 2023}
+    \centerline{\color{white}April, 2023}
     \endtextbox
 
 \endslide
@@ -522,7 +522,7 @@ There \vrule \vbox to 20pt{}
     \endtextbox
 
     \textbox\empty{4cm}{\lastoy}{\hsize-5cm}{}
-        \macrousage\newbox<control sequence>/emacrousage: Allocates a box and sets {\fifteentt control sequence} to reference this
+        \macrousage\newbox<control sequence>/emacrousage: Allocates a box and sets {\it control sequence} to reference this
         box.
     \endtextbox
 
@@ -531,7 +531,7 @@ There \vrule \vbox to 20pt{}
     \endtextbox
 
     \textbox\empty{4cm}{\lastoy}{\hsize-5cm}{}
-        \macrousage\setbox<box number> = <box>/emacrousage: Sets the {\fifteentt box number}-th box register to be equal to
+        \macrousage\setbox<box number> = <box>/emacrousage: Sets the {\it box number}-th box register to be equal to
         {\fifteentt box}.
     \endtextbox
 
@@ -540,7 +540,7 @@ There \vrule \vbox to 20pt{}
     \endtextbox
 
     \textbox\empty{4cm}{\lastoy}{\hsize-5cm}{}
-        \macrousage\box<box number>/emacrousage: uses the {\fifteentt box number} box register.
+        \macrousage\box<box number>/emacrousage: uses the {\it box number} box register.
         After using this, the box register is emptied.
     \endtextbox
 
@@ -557,7 +557,7 @@ There \vrule \vbox to 20pt{}
     \endtextbox
 
     \textbox\empty{4cm}{\lastoy}{\hsize-5cm}{}
-        \macrousage\unhbox<box number>/emacrousage: uses the {\fifteentt box number} box register and removes a level of boxing.
+        \macrousage\unhbox<box number>/emacrousage: uses the {\it box number} box register and removes a level of boxing.
 
 \beginhi
 \setbox0=\hbox{A} \setbox1=\hbox{\unhbox0 B}
@@ -788,7 +788,7 @@ Next line
     \bheadline
 
     \textbox\empty{1cm}{2cm}{\hsize-2cm}{}
-        Notice the \macroname\quitvmode{} before the \macroname\leaders{}, this is necessary because \macroname\leaders{} works in
+        Notice the \macroname\quitvmode{} before the \hfill\break\macroname\leaders{}, this is necessary because \macroname\leaders{} works in
         vertical mode as well, but its glue must be vertical glue (ie \macroname\vskip, \macroname\vfill, etc).
     \endtextbox
 
@@ -816,7 +816,7 @@ Hello\leaders\hbox to.5cm{\hss.\hss}\hfill there!
 
         \quitvmode
         \rlap{\color{grey}%
-            \line{\leaders\hbox to.5cm{\hss\boxed{\hbox to.5cm{\vbox to.5cm{}}}\hss}\hfil}%
+            \line{\leaders\hbox to.5cm{\hss\boxed{\hbox to.5cm{\hss\vbox to.5cm{\vss}}}\hss}\hfil}%
         }%
         Hello\hfill there!
 
@@ -825,7 +825,7 @@ Hello\leaders\hbox to.5cm{\hss.\hss}\hfill there!
 
         \quitvmode
         \rlap{\color{grey}%
-            \line{\leaders\hbox to.5cm{\hss\boxed{\hbox to.5cm{\vbox to.5cm{}}}\hss}\hfill}%
+            \line{\leaders\hbox to.5cm{\hss\boxed{\hbox to.5cm{\hss\vbox to.5cm{\vss}}}\hss}\hfill}%
         }%
         Hello\leaders\hbox to.5cm{\hss.\hss}\hfill there!
     \endtextbox
@@ -1746,6 +1746,371 @@ MACRO(hello)
         \initstring{second string}{ World!}
         \appendstring{first string}{second string}
         \printstring{first string}
+    \endtextbox
+
+    \ofootline{Macros and primitives}
+\endslide
+
+\beginslide
+    \oheadline
+
+    \textbox\empty{1cm}{2cm}{\hsize-2cm}{}
+        As you may be aware, certain characters in \TeX{} are assigned special purposes: curly braces (\icode{...}/eicode) begin and end groups, dollar signs start and end math mode,
+        tildes (\icode~/eicode) create non-breaking spaces, etc.
+
+        While it may seem like this is the case, it is not.
+        No character is assigned a special purpose, as this implementation would not be robust: there are many times when you may want a character to have a different purpose (eg. verbatim environments).
+        Instead each character is assigned a {\it category code} (catcode) and each category code has a special purpose.
+
+        Thus while certain characters may have special attributes, they are not inherent to the character: they are inherent the catcode assigned to the character.
+    \endtextbox
+
+    \ofootline{Macros and primitives}
+\endslide
+
+\beginslide
+    \oheadline
+
+    \textbox\empty{1cm}{2cm}{\hsize-2cm}{}
+        The following is a list of all category codes, their purpose, and ``canonical'' examples of characters with those category codes.
+    \endtextbox
+
+    \textbox\coloredbox{1cm}{\lastey+.5cm}{1cm}{{orange}}
+        \centerline{\color{white}\tt0}
+    \endtextbox
+
+    \textbox\empty{3cm}{\lastoy}{\hsize-4cm}{}
+        Escape character (eg. \icode\/eicode)
+
+        An escape character denotes the beginning of a control sequence, which is an escape character (catcode $0$) followed by a string of letters (catcode $11$) or a single non-letter.
+    \endtextbox
+
+    \textbox\coloredbox{1cm}{\lastey+.25cm}{1cm}{{orange}}
+        \centerline{\color{white}\tt1+2}
+    \endtextbox
+
+    \textbox\empty{3cm}{\lastoy}{\hsize-4cm}{}
+        Begin (catcode $1$) and end (catcode $2$) group (eg. \icode{/eicode{} and \icode}/eicode)
+
+        These characters begin and end nested groups, which are used for locality and parameters.
+    \endtextbox
+
+    \textbox\coloredbox{1cm}{\lastey+.25cm}{1cm}{{orange}}
+        \centerline{\color{white}\tt3}
+    \endtextbox
+
+    \textbox\empty{3cm}{\lastoy}{\hsize-4cm}{}
+        Math shift (eg. \icode$/eicode) %$
+
+        This begins or ends math (or display math) mode.
+    \endtextbox
+
+    \textbox\coloredbox{1cm}{\lastey+.25cm}{1cm}{{orange}}
+        \centerline{\color{white}\tt4}
+    \endtextbox
+
+    \textbox\empty{3cm}{\lastoy}{\hsize-4cm}{}
+        Alignment tab (eg. \icode&/eicode)
+
+        This is the character used in alignment primitives to begin new tabs.
+    \endtextbox
+
+    \textbox\coloredbox{1cm}{\lastey+.25cm}{1cm}{{orange}}
+        \centerline{\color{white}\tt5}
+    \endtextbox
+
+    \textbox\empty{3cm}{\lastoy}{\hsize-4cm}{}
+        End of line (eg. the carriage return/newline character)
+
+        When \TeX{} encounters an end-of-line character, depending on its current state it may add a space or end the paragraph or nothing.
+    \endtextbox
+
+    \ofootline{Macros and primitives}
+\endslide
+
+\beginslide
+    \oheadline
+
+    \textbox\coloredbox{1cm}{2cm}{1cm}{{orange}}
+        \centerline{\color{white}\tt6}
+    \endtextbox
+
+    \textbox\empty{3cm}{\lastoy}{\hsize-4cm}{}
+        Parameter (eg. \icode #/eicode)
+
+        This is the character used to denote parameters within macros.
+    \endtextbox
+
+    \textbox\coloredbox{1cm}{\lastey+.25cm}{1cm}{{orange}}
+        \centerline{\color{white}\tt7+8}
+    \endtextbox
+
+    \textbox\empty{3cm}{\lastoy}{\hsize-4cm}{}
+        Superscript (catcode $7$) and subscript (catcode $8$) (eg. \icode ^/eicode{} and \icode _/eicode)
+
+        These are the characters used to create superscripts and subscripts in math mode.
+    \endtextbox
+
+    \textbox\coloredbox{1cm}{\lastey+.25cm}{1cm}{{orange}}
+        \centerline{\color{white}\tt9}
+    \endtextbox
+
+    \textbox\empty{3cm}{\lastoy}{\hsize-4cm}{}
+        Ignored (eg. NUL byte)
+
+        These characters are ignored by \TeX.
+    \endtextbox
+
+    \textbox\coloredbox{1cm}{\lastey+.25cm}{1cm}{{orange}}
+        \centerline{\color{white}\tt10}
+    \endtextbox
+
+    \textbox\empty{3cm}{\lastoy}{\hsize-4cm}{}
+        Space (eg. the space character)
+
+        Space characters make \TeX{} insert a space if it is not currently skipping spaces.
+    \endtextbox
+
+    \textbox\coloredbox{1cm}{\lastey+.25cm}{1cm}{{orange}}
+        \centerline{\color{white}\tt11}
+    \endtextbox
+
+    \textbox\empty{3cm}{\lastoy}{\hsize-4cm}{}
+        Letter (eg. a\dots z, A\dots Z)
+
+        These are the characters which can be used in control words.
+    \endtextbox
+
+    \textbox\coloredbox{1cm}{\lastey+.25cm}{1cm}{{orange}}
+        \centerline{\color{white}\tt12}
+    \endtextbox
+
+    \textbox\empty{3cm}{\lastoy}{\hsize-4cm}{}
+        Other (eg. \icode @/eicode)
+
+        An Other character is a character with no other category code.
+        Its special purpose is that it has no special purpose.
+        It is therefore useful for example when creating verbatim environments.
+    \endtextbox
+
+    \ofootline{Macros and primitives}
+\endslide
+
+\beginslide
+    \oheadline
+
+    \textbox\coloredbox{1cm}{2cm}{1cm}{{orange}}
+        \centerline{\color{white}\tt13}
+    \endtextbox
+
+    \textbox\empty{3cm}{\lastoy}{\hsize-4cm}{}
+        Active (eg. \icode ~/eicode)
+
+        These are characters which act like macros, they can be defined with \macroname\def{} and \macroname\let.
+    \endtextbox
+
+    \textbox\coloredbox{1cm}{\lastey+.25cm}{1cm}{{orange}}
+        \centerline{\color{white}\tt14}
+    \endtextbox
+
+    \textbox\empty{3cm}{\lastoy}{\hsize-4cm}{}
+        Comment (eg. \icode %/eicode)
+
+        Everything after this character until the end of the line (inclusive) are ignored.
+    \endtextbox
+
+    \textbox\coloredbox{1cm}{\lastey+.25cm}{1cm}{{orange}}
+        \centerline{\color{white}\tt15}
+    \endtextbox
+
+    \textbox\empty{3cm}{\lastoy}{\hsize-4cm}{}
+        Invalid (eg. DELETE)
+
+        These characters are ignored but make \TeX{} print an error message.
+    \endtextbox
+
+    \ofootline{Macros and primitives}
+\endslide
+
+\beginslide
+    \oheadline
+
+    \textbox\empty{1cm}{2cm}{\hsize-2cm}{}
+        Category codes can be accessed and altered using the \macroname\catcode{} primitive.
+        \macroname\catcode{} should be followed by an integer corresponding to the character code of the character whose category code you'd like to access.
+        \TeX{} uses ASCII codes for its character codes, but some unicode-supporting engines use unicode.
+
+        For example since the ASCII value of `a' is $97$, doing \icode \catcode97=13/eicode{} changes `a` to be an active character.
+
+        But remembering ASCII by heart is a pain, and fortunately not necessary.
+        When \TeX{} is looking for a number and encounters a backtick ({\tt\char18}) followed by a character or a control sequence of one character, it uses the character code of that character.
+
+        So for example we could have done \icode \catcode`a=13/eicode{} or \icode \catcode`\a=13/eicode.
+
+        The reason for allowing control sequences as well is because a construct like \icode \catcode`\=12/eicode{} will not set \icode\/eicode's category $12$, rather it will set {\tt=}'s category code.
+        But \icode \catcode`\\=12/eicode{} will work.
+    \endtextbox
+
+    \ofootline{Macros and primitives}
+\endslide 
+
+\beginslide
+    \oheadline
+
+    \textbox\empty{1cm}{2cm}{\hsize-2cm}{}
+        The most common use of catcode manipulation is changing the catcode of {\tt @} (and to a lesser extent, {\tt\icode _/eicode}).
+        This is commonly done by package authors to create internal macros which they want to hide from the user.
+        This is done by changing the catcode of {\tt @} to $11$ (letter) and creating macros which have {\tt @} in their name.
+        At the end of the package the catcode of {\tt @} is reverted to $12$ (other), its original value, and so users cannot use these macros without themselves changing the catcode of {\tt @}.
+
+        This is done in \LaTeX{} with the macros \macroname\makeatletter{} and \macroname\makeatother.
+        These essentially expand to \icode \catcode`@=11/eicode{} and \icode \catcode`@=12/eicode{} respectively.
+    \endtextbox
+
+    \ofootline{Macros and primitives}
+\endslide
+
+\beginslide
+    \oheadline
+
+    \textbox\empty{1cm}{2cm}{\hsize-2cm}{}
+        Suppose you have a macro like
+\let\_output_line_number=\@gobble
+\def\syntax@buf{.25cm}
+\beginhi
+\def\makeatletter{\catcode`\@=11}
+\endhi
+
+        While this seems like a fine macro, it is actually problematic.
+        For example suppose we have a macro called \macroname\version@name{} which contains a number, say $3$.
+        Take a look at the following code:
+\beginhi
+\makeatletter
+\version@name
+\endhi
+
+        This will actually fail with the error message
+
+        \begincode
+! Undefined control sequence 
+l.X \makeatletter\version
+                         @num
+        /endcode
+
+        This is because \TeX{} continues reading for numbers after the {\tt11} in \hfill\break
+        \macroname\makeatletter, and so it comes across \icode\version@num/eicode.
+        Since the category code of {\tt @} is still $12$, it reads this as the control sequence \macroname\version{} followed by {\tt @num}.
+        So it attempts to expand \macroname\version{} to see if it contains a number, but since \macroname\version{} doesn't exist, it errors.
+
+    \endtextbox
+
+    \ofootline{Macros and primitives}
+\endslide
+
+\beginslide
+    \oheadline
+
+    \textbox\empty{1cm}{2cm}{\hsize-2cm}{}
+        Now suppose it was called \macroname\versionname{} instead.
+        This still errors, but for a different reason:
+
+        \begincode
+! Invalid code (113), should be in the range 0..15.
+        /endcode
+
+        If we follow the process above, notice that \TeX{} continues reading after the {\tt11}, encounters \macroname\versionnumber{} which it expands and finds a $3$.
+        Thus it appends this $3$ to the current number it is reading to get $113$.
+        So it attempts to set the category code of {\tt @} to $113$, which is an invalid category code.
+
+        We can avoid all of these issues with a slight redefinition to our \macroname\makeatletter.
+        These issues stem from the fact that \TeX{} continues to scan even after the $11$, so all we need to do is stop it from scanning past the $11$.
+        This can be done by inserting a \macroname\relax{} after the $11$.
+        \macroname\relax{} is a \TeX{} primitive which is unexpandable but does nothing, so it stops \TeX's scan without inserting anything into the stream.
+
+\let\_output_line_number=\@gobble
+\def\syntax@buf{.25cm}
+\beginhi
+\def\makeatletter{\catcode`@=11\relax}
+\endhi
+
+        In general with constructs where \TeX{} is scanning ahead to look for parameters, it is a good idea to place a \macroname\relax{} after the parameter to minimize the risk of issues like this.
+
+    \endtextbox
+
+    \ofootline{Macros and primitives}
+\endslide
+
+\beginslide
+    \oheadline
+
+    \textbox\empty{1cm}{2cm}{\hsize-2cm}{}
+        Another common issue with catcodes is the issue of {\it frozen catcodes}.
+        This issue stems from the fact that \TeX{} will freeze catcodes in certain situations, namely when parameterizing tokens and in the definition of a macro (the parameter and replacement text).
+
+        Let's look at the following situation: suppose we have some macro called \macroname\m@cro{} and the following code:
+    \endtextbox
+
+    \textbox\_framebox{1cm}{\lastey+.25cm}{\hsize-2cm}{}
+\beginhi
+\def\identity#1{#1}
+\identity{{\catcode`@=11\relax \m@cro}}
+
+\def\macro{{\catcode`@=11\relax \m@cro}}
+\macro
+\endhi
+    \endtextbox
+
+    \textbox\empty{1cm}{\lastey+.25cm}{\hsize-2cm}{}
+        The double braces here are in order to keep catcode alterations local.
+
+        Both of these calls will fail due to catcode freezing.
+        The first one fails because the catcode of {\tt @} in \macroname\m@cro{} is $12$ (other) when the parameter is scanned, and so {\tt @}'s catcode is frozen at $12$ and so \TeX{} sees
+        \macroname\m@cro{} as the control sequence \macroname\m{} followed by {\tt @cro}.
+        Since \macroname\m{} is not defined, it will error.
+
+        Similarly, \macroname\macro{} fails because when the definition of \macroname\macro{} is read, {\tt @} has catcode $12$ (other) and so when \TeX{} tokenizes the replacement text of \macroname\macro,
+        the catcode of {\tt @} is frozen at $12$.
+    \endtextbox
+
+    \ofootline{Macros and primitives}
+\endslide
+
+\beginslide
+    \oheadline
+
+    \textbox\empty{1cm}{2cm}{\hsize-2cm}{}
+        \TeX{} also allows you to use \icode ^^/eicode{} to insert ASCII characters by following the \icode ^^/eicode{} with two lowercase hexadecimal digits.
+        So for example \icode ^^61/eicode{} inserts the character whose ASCII value is $61$ in hex (or $97$ in decimal: ^^61)
+
+        There is another convention where you follow \icode ^^/eicode{} with a single character and if that characters internal code is between $64$ and $127$ then $64$ is subtracted from the code.
+        Otherwise $64$ is added to the code.
+        So for example \icode ^^M/eicode{} gives ASCII character $77-64=13$ which is the carriage return character.
+    \endtextbox
+
+    \textbox\_framebox{1cm}{\lastey+.25cm}{\hsize-2cm}{}
+\beginhi
+{
+    \catcode`^^0d=12 % Why are comments necessary?
+    \catcode`@=11 %
+    \gdef\@getline#1#2^^0d{\egroup#1{#2}}% ^^0d = \n
+    \gdef\getline#1{\bgroup\catcode`^^0d=12\relax\@getline{#1}}%
+}
+
+\def\parenthesize#1{(#1)}
+\getline\parenthesize Hello there!
+\endhi
+    \endtextbox
+
+    \textbox\coloredbox{1cm}{\lastey+5pt}{\hsize-2cm-\colorboxbuf}{[rgb]{.9 .9 .9}}
+        {
+            \catcode`\^^0d=12 %
+            \catcode`@=11 %
+            \long\gdef\@getlineA#1#2^^0d{\egroup #1{#2}}%
+            \gdef\getlineA#1{\bgroup\catcode`\^^0d=12 \@getlineA{#1}}%
+        }
+        
+        \def\parenthesize#1{(#1)}
+        \getlineA\parenthesize Hello there!
     \endtextbox
 
     \ofootline{Macros and primitives}
